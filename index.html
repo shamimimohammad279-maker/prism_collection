@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#080D18">
+<title>PRISM Collection</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;500;700&display=swap">
+<style>
+:root{--bg:#080D18;--glass:rgba(201,228,255,.08);--bd:rgba(255,255,255,.15);--pri:#8CCBFF;--sec:#A99BFF;--acc:#79E3D0;--tx:#F4F7FC;--tx2:#AAB7C8;--sh:0 10px 30px rgba(0,0,0,.35);color-scheme:dark}
+@media (prefers-color-scheme:light){:root{--bg:#F1F5FA;--glass:rgba(255,255,255,.65);--bd:rgba(21,32,51,.12);--pri:#397FC2;--sec:#7467C8;--acc:#268F83;--tx:#152033;--tx2:#64748B;--sh:0 10px 30px rgba(21,32,51,.1);color-scheme:light}}
+html,body{height:100%}*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:radial-gradient(500px 360px at 85% -5%,color-mix(in srgb,var(--sec) 30%,transparent),transparent),radial-gradient(520px 380px at 0% 30%,color-mix(in srgb,var(--pri) 22%,transparent),transparent),var(--bg);background-attachment:fixed;color:var(--tx);font-family:"Vazirmatn",Tahoma,sans-serif}
+#home{max-width:480px;margin:0 auto;padding:calc(18px + env(safe-area-inset-top,0px)) 16px calc(28px + env(safe-area-inset-bottom,0px))}
+h1{margin:0 2px 4px;font-size:22px;direction:ltr}.lead{margin:0 2px 16px;color:var(--tx2);font-size:14px;line-height:1.9}
+#list{display:grid;gap:12px}
+.app{display:flex;align-items:center;gap:14px;width:100%;text-align:right;font:inherit;color:var(--tx);background:var(--glass);border:1px solid var(--bd);border-radius:24px;padding:16px;box-shadow:var(--sh);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);cursor:pointer}
+.app:active{transform:scale(.98)}
+.ic{flex:0 0 54px;height:54px;border-radius:18px;display:grid;place-items:center;font-size:26px;background:color-mix(in srgb,var(--c) 22%,transparent);border:1px solid color-mix(in srgb,var(--c) 55%,transparent)}
+.tx{min-width:0;flex:1}.tx b{display:block;font-size:16px;direction:ltr;text-align:right}.tx span{display:block;color:var(--tx2);font-size:13px;line-height:1.8}
+.go{color:var(--c);font-size:13px;font-weight:700;white-space:nowrap}
+#view{position:fixed;inset:0;display:none;flex-direction:column;background:var(--bg)}
+#view.on{display:flex}
+#bar{display:flex;align-items:center;gap:10px;padding:calc(8px + env(safe-area-inset-top,0px)) 12px 8px;border-bottom:1px solid var(--bd);background:var(--glass)}
+#bk{font:inherit;color:var(--tx);border:1px solid var(--bd);background:var(--glass);border-radius:14px;min-height:42px;padding:0 16px;cursor:pointer}
+#nm{font-weight:700;direction:ltr}
+#fr{flex:1;position:relative}
+#fr iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:none;background:transparent}
+#fr iframe.on{display:block}
+:focus-visible{outline:3px solid var(--pri);outline-offset:2px}
+</style>
+</head>
+<body>
+<div id="home">
+<h1>PRISM Collection</h1>
+<p class="lead">ابزارهای مستقل، هر کدام در یک فایل جدا. هر کدام اطلاعاتش را جدا ذخیره می‌کند.</p>
+<div id="list"></div>
+</div>
+<div id="view"><div id="bar"><button id="bk">← منو</button><span id="nm"></span></div><div id="fr"></div></div>
+<!-- لیست ماژول‌ها در modules.js است. برای افزودن ماژول جدید فقط همان فایل را ویرایش کن. -->
+<script src="modules.js"></script>
+<script>
+(function(){
+var M=(window.PRISM_MODULES||window.EXTRA_MODULES||[]).filter(function(m){return m&&m.k&&m.file}),
+    list=document.getElementById('list'),fr=document.getElementById('fr'),view=document.getElementById('view'),
+    nm=document.getElementById('nm'),F={},B={};
+if(!M.length){var p=document.createElement('p');p.className='lead';p.textContent='لیست ماژول‌ها خالی است یا modules.js پیدا نشد.';list.appendChild(p)}
+M.forEach(function(m){
+  var c=['pri','sec','acc'].indexOf(m.color)>-1?m.color:'pri';
+  B[m.k]=m;
+  var b=document.createElement('button');b.className='app';b.style.setProperty('--c','var(--'+c+')');b.dataset.k=m.k;
+  b.innerHTML='<span class="ic" aria-hidden="true"></span><span class="tx"><b></b><span></span></span><span class="go">باز کردن</span>';
+  b.querySelector('.ic').textContent=m.icon||'✨';
+  b.querySelector('b').textContent=m.name||m.k;
+  b.querySelector('.tx>span').textContent=m.desc||'';
+  list.appendChild(b)});
+function open(k){
+  var m=B[k];if(!m)return;
+  if(!F[k]){var f=document.createElement('iframe');f.title=m.name||k;f.src=m.file;fr.appendChild(f);F[k]=f}
+  Object.keys(F).forEach(function(x){F[x].classList.toggle('on',x===k)});
+  nm.textContent=m.name||k;view.classList.add('on');
+  try{history.pushState({k:k},'')}catch(e){}
+}
+function close(){view.classList.remove('on')}
+list.onclick=function(e){var b=e.target.closest('[data-k]');if(b)open(b.dataset.k)};
+document.getElementById('bk').onclick=function(){close();try{if(history.state&&history.state.k)history.back()}catch(e){}};
+addEventListener('popstate',function(){close()});
+})();
+</script>
+</body>
+</html>

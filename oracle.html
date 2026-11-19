@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#080D18">
+<title>PRISM ORACLE</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;500;700&display=swap">
+<style>
+:root{--bg:#080D18;--sur:#111B2B;--glass:rgba(201,228,255,.08);--bd:rgba(255,255,255,.15);--pri:#8CCBFF;--sec:#A99BFF;--acc:#79E3D0;--tx:#F4F7FC;--tx2:#AAB7C8;--on:#080D18;--sh:0 10px 30px rgba(0,0,0,.35);color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#F1F5FA;--sur:#FFFFFF;--glass:rgba(255,255,255,.65);--bd:rgba(21,32,51,.12);--pri:#397FC2;--sec:#7467C8;--acc:#268F83;--tx:#152033;--tx2:#64748B;--on:#FFFFFF;--sh:0 10px 30px rgba(21,32,51,.1);color-scheme:light}}
+:root[data-theme="light"]{--bg:#F1F5FA;--sur:#FFFFFF;--glass:rgba(255,255,255,.65);--bd:rgba(21,32,51,.12);--pri:#397FC2;--sec:#7467C8;--acc:#268F83;--tx:#152033;--tx2:#64748B;--on:#FFFFFF;--sh:0 10px 30px rgba(21,32,51,.1);color-scheme:light}
+:root:root:root{--pri:var(--sec)}
+html{scroll-padding-top:env(safe-area-inset-top,0px);height:100%}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;min-height:100%;background:radial-gradient(500px 360px at 85% -5%,color-mix(in srgb,var(--sec) 30%,transparent),transparent),radial-gradient(520px 380px at 0% 30%,color-mix(in srgb,var(--pri) 22%,transparent),transparent),var(--bg);background-attachment:fixed;color:var(--tx);font-family:"Vazirmatn",Tahoma,sans-serif;padding:0 16px 96px}
+header{max-width:480px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;padding:16px 2px 8px}
+h1{margin:0;font-size:17px;font-weight:700;letter-spacing:.5px;direction:ltr;display:flex;align-items:center;gap:8px}
+main{max-width:480px;margin:0 auto}
+.tab{display:none}.tab.on{display:block;animation:in .25s ease}
+@keyframes in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.tab.on{animation:none}*{animation:none!important;transition:none!important}}
+.card{background:var(--glass);border:1px solid var(--bd);border-radius:24px;padding:18px;margin-bottom:12px;box-shadow:var(--sh);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+.card h2{margin:0 0 10px;font-size:13px;font-weight:500;color:var(--tx2)}
+.num{direction:ltr;font-variant-numeric:tabular-nums;text-align:center}
+.sub{color:var(--tx2);font-size:14px;line-height:1.9}
+button,input,select,textarea{font:inherit;color:var(--tx)}
+button{border:1px solid var(--bd);background:var(--glass);border-radius:16px;min-height:48px;padding:0 16px;cursor:pointer;font-weight:500}
+button:active{transform:scale(.97)}button:disabled{opacity:.45}
+.pri{background:var(--pri);color:var(--on);border-color:transparent;font-weight:700}
+.row{display:flex;gap:8px}.row>*{flex:1;min-width:0}.gap{margin-top:10px}
+input:not([type=range]):not([type=checkbox]):not([type=color]),select{width:100%;min-height:48px;border-radius:14px;border:1px solid var(--bd);background:var(--glass);padding:0 12px}
+select{background:var(--sur)}
+textarea{width:100%;border-radius:14px;border:1px solid var(--bd);background:var(--glass);padding:12px;line-height:1.9;resize:vertical}
+input[type=range]{width:100%;accent-color:var(--pri);min-height:30px}
+input[type=color]{width:100%;height:48px;border:1px solid var(--bd);border-radius:14px;background:var(--glass);padding:4px}
+:focus-visible{outline:3px solid var(--pri);outline-offset:2px}
+.lb{display:flex;justify-content:space-between;font-size:13px;color:var(--tx2);margin:10px 0 0}.lb b{color:var(--tx);font-weight:500;direction:ltr}
+.ck{display:flex;align-items:center;gap:8px;margin-top:10px;font-size:14px}.ck input{width:20px;height:20px;accent-color:var(--pri)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}.chip{min-height:38px;padding:0 12px;font-size:13px;border-radius:14px}.chip.on{background:var(--pri);color:var(--on);border-color:transparent;font-weight:700}
+.item{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 0;border-top:1px solid var(--bd)}.item:first-child{border-top:0}
+.item b{font-weight:500}.item small{display:block;color:var(--tx2)}
+.x{min-height:40px;width:40px;padding:0;flex:0 0 40px;color:var(--tx2)}
+.empty{color:var(--tx2);text-align:center;padding:14px 0;font-size:14px;line-height:1.9}
+.msg{min-height:22px;text-align:center;color:var(--acc);font-size:14px;margin:4px 0}.msg.err{color:#ff8f8f}
+nav{position:fixed;inset:auto 0 0 0;padding:0 14px calc(10px + env(safe-area-inset-bottom,0px))}
+nav div{max-width:480px;margin:0 auto;display:flex;gap:4px;background:var(--glass);border:1px solid var(--bd);border-radius:22px;padding:5px;-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);box-shadow:var(--sh)}
+nav button{flex:1;border:0;background:none;min-height:46px;padding:0 2px;font-size:12.5px;color:var(--tx2);border-radius:17px}
+nav button.on{background:var(--pri);color:var(--on);font-weight:700}
+.hid{display:none!important}
+.orb{width:18px;height:18px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff,var(--pri) 45%,#17305a);box-shadow:0 0 16px var(--pri)}
+</style>
+</head>
+<body>
+<header><h1><span class="orb"></span>PRISM ORACLE</h1><button class="x" id="theme" aria-label="تغییر تم روشن و تاریک">◐</button></header>
+<main>
+
+<div class="card" style="display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 16px"><span class="sub" style="font-size:13px">ابزارهای محلی: فعال</span><span id="net" class="chip" style="display:inline-flex;align-items:center;border:1px solid var(--bd);min-height:30px"></span></div>
+<section class="tab on" id="txt">
+ <div class="card"><textarea id="tx" rows="11" placeholder="متنت را اینجا بنویس یا بچسبان. هر تغییر خودکار روی همین دستگاه ذخیره می‌شود." aria-label="متن"></textarea>
+  <div class="row gap"><button id="cp">کپی متن</button><button id="cl">پاک‌کردن</button></div><div class="msg" id="cm" role="status"></div></div>
+ <div class="card"><h2>آمار متن</h2><div id="st" class="row" style="flex-wrap:wrap"></div></div>
+</section>
+<section class="tab" id="ana">
+ <div class="card"><h2>کلمات کلیدی</h2><div class="chips" id="kw"></div></div>
+ <div class="card"><h2>خلاصه‌ی استخراجی</h2>
+  <label class="lb" for="sn"><span>تعداد جمله‌ها</span><b id="sno">3</b></label><input type="range" id="sn" min="1" max="6" step="1" value="3">
+  <div class="row gap"><button class="pri" id="sg">استخراج خلاصه</button></div>
+  <div id="sm" class="sub" style="margin-top:10px;color:var(--tx)"></div>
+  <div class="sub" style="font-size:12px;margin-top:8px">این ابزار مهم‌ترین جمله‌های خود متن را انتخاب می‌کند و چیزی را بازنویسی نمی‌کند.</div></div>
+</section>
+<section class="tab" id="fmt"><div class="card"><h2>قالب‌بندی متن</h2><div class="chips" id="fb"></div><div class="row gap"><button id="un" disabled>برگرداندن آخرین تغییر</button></div><div class="msg" id="fm" role="status"></div></div></section>
+<section class="tab" id="his"><div class="card"><div class="row"><input id="hn" placeholder="نام نسخه (اختیاری)" aria-label="نام نسخه"><button class="pri" id="hs" style="flex:0 0 auto">ذخیره‌ی نسخه</button></div></div><div class="card" id="hl"></div></section>
+<section class="tab" id="set"><div class="card"><h2>اتصال به هوش مصنوعی آنلاین</h2>
+ <div class="sub"><b style="color:var(--tx)">وضعیت: غیرفعال در نسخه‌ی وب</b><br>پرسش و پاسخ، خلاصه‌سازی پیشرفته و بازنویسی با لحن به اتصال به یک سرویس بیرونی نیاز دارند. صفحه‌ی منتشرشده اجازه‌ی ارسال درخواست به سرویس‌های دیگر را ندارد، برای همین این بخش را نساخته‌ام تا دکمه‌ی بی‌اثر نداشته باشی.</div>
+ <div class="sub gap">در نسخه‌ی اپ اندروید قرار است کاربر خودش سرویس و کلید را وارد کند. کلید فقط روی دستگاه می‌ماند و متن بدون تأیید روشن تو به هیچ سرویسی فرستاده نمی‌شود.</div>
+ <div class="sub gap">همه‌ی ابزارهای این صفحه روی دستگاه خودت اجرا می‌شوند و چیزی به جایی ارسال نمی‌شود.</div></div></section>
+
+</main>
+<nav><div role="tablist"><button class="on" data-t="txt">متن</button><button data-t="ana">تحلیل</button><button data-t="fmt">قالب</button><button data-t="his">نسخه‌ها</button><button data-t="set">اتصال</button></div></nav>
+<script>
+var K='prism-oracle-';
+
+var $=function(s){return document.querySelector(s)},$$=function(s){return document.querySelectorAll(s)};
+function ls(k,d){try{var v=localStorage.getItem(K+k);return v?JSON.parse(v):d}catch(e){return d}}
+function sv(k,v){try{localStorage.setItem(K+k,JSON.stringify(v))}catch(e){}}
+function p2(n){return(n<10?'0':'')+n}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+var t0=ls('theme',null);if(t0)document.documentElement.dataset.theme=t0;
+$('#theme').onclick=function(){var r=document.documentElement,c=r.dataset.theme||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');r.dataset.theme=c==='dark'?'light':'dark';sv('theme',r.dataset.theme)};
+var tabs=$$('nav button');
+function go(t){tabs.forEach(function(x){x.classList.toggle('on',x.dataset.t===t)});$$('.tab').forEach(function(e){e.classList.toggle('on',e.id===t)});if(window.onTab)onTab(t)}
+tabs.forEach(function(b){b.onclick=function(){go(b.dataset.t)}});
+
+
+var tx=$('#tx'),undo=null;
+tx.value=ls('text','');
+var SW='و در به از که این را با است برای آن یک هم تا یا بر هر شد می‌شود می‌کند های کرد بود خود نیز اما اگر چه بود‌ه ها شده دارد باید کنند دیگر بین پس همه ما من تو او آنها وی چون بی روی بعد قبل مثل هیچ بسیار the a an and of to in is it for on that with as are was be by at or from this'.split(' ');
+function words(t){return (t.match(/[\p{L}\p{N}\u200c]+/gu)||[]).filter(function(w){return w.replace(/\u200c/g,'').length})}
+function sents(t){return (t.match(/[^.!؟?\n]+[.!؟?]*/g)||[]).map(function(s){return s.trim()}).filter(function(s){return words(s).length>1})}
+function stats(){var t=tx.value,w=words(t).length,c=t.length,cn=t.replace(/\s/g,'').length,s=sents(t).length,p=t.split(/\n\s*\n/).filter(function(x){return x.trim()}).length,m=Math.ceil(w/200);
+ var d=[['کلمه',w],['کاراکتر',c],['بدون فاصله',cn],['جمله',s],['بند',p],['زمان مطالعه',w?(m<=1?'کمتر از ۱ دقیقه':'حدود '+m+' دقیقه'):'-']];
+ $('#st').innerHTML=d.map(function(x){return '<div style="flex:1 0 30%;text-align:center;padding:8px 0"><div style="font-size:20px;font-weight:700">'+x[1]+'</div><div class="sub" style="font-size:12px">'+x[0]+'</div></div>'}).join('')}
+function keys(){var t=tx.value,f={};words(t).forEach(function(w){w=w.toLowerCase();if(w.length>2&&SW.indexOf(w)<0&&!/^\d+$/.test(w))f[w]=(f[w]||0)+1});
+ return Object.keys(f).map(function(k){return[k,f[k]]}).sort(function(a,b){return b[1]-a[1]}).slice(0,12)}
+function kwDraw(){var k=keys();$('#kw').innerHTML=k.length?k.map(function(x){return '<span class="chip" style="display:inline-flex;align-items:center;border:1px solid var(--bd)">'+esc(x[0])+' · '+x[1]+'</span>'}).join(''):'<div class="empty">برای دیدن کلمات کلیدی، اول در صفحه‌ی «متن» چیزی بنویس.</div>'}
+$('#sn').oninput=function(e){$('#sno').textContent=e.target.value};
+$('#sg').onclick=function(){var S=sents(tx.value),n=+$('#sn').value;if(S.length<2){$('#sm').textContent='برای خلاصه‌کردن دست‌کم دو جمله لازم است.';return}
+ var f={};keys().forEach(function(x){f[x[0]]=x[1]});
+ var sc=S.map(function(s,i){var ws=words(s),v=0;ws.forEach(function(w){v+=f[w.toLowerCase()]||0});return{i:i,s:s,v:v/Math.sqrt(ws.length)}});
+ var top=sc.slice().sort(function(a,b){return b.v-a.v}).slice(0,Math.min(n,S.length)).sort(function(a,b){return a.i-b.i});
+ $('#sm').innerHTML=top.map(function(x){return '<div style="margin-bottom:8px">• '+esc(x.s)+'</div>'}).join('')};
+var F=[['حذف فاصله‌های اضافی',function(t){return t.replace(/[ \t]+/g,' ').replace(/ +\n/g,'\n').trim()}],
+['حذف خطوط خالی',function(t){return t.replace(/\n\s*\n+/g,'\n')}],
+['یکسان‌سازی «ی» و «ک»',function(t){return t.replace(/ي/g,'ی').replace(/ك/g,'ک')}],
+['ارقام فارسی',function(t){return t.replace(/[0-9]/g,function(d){return '۰۱۲۳۴۵۶۷۸۹'[d]})}],
+['ارقام انگلیسی',function(t){return t.replace(/[۰-۹]/g,function(d){return '۰۱۲۳۴۵۶۷۸۹'.indexOf(d)}).replace(/[٠-٩]/g,function(d){return '٠١٢٣٤٥٦٧٨٩'.indexOf(d)})}],
+['حروف انگلیسی کوچک',function(t){return t.toLowerCase()}],
+['حروف انگلیسی بزرگ',function(t){return t.toUpperCase()}],
+['مرتب‌سازی خطوط',function(t){return t.split('\n').sort(function(a,b){return a.localeCompare(b,'fa')}).join('\n')}]];
+$('#fb').innerHTML=F.map(function(f,i){return '<button class="chip" data-i="'+i+'">'+f[0]+'</button>'}).join('');
+$('#fb').onclick=function(e){var b=e.target.closest('[data-i]');if(!b)return;var o=tx.value,n=F[+b.dataset.i][1](o);
+ if(n===o){$('#fm').textContent='متن تغییری نکرد.';return}undo=o;tx.value=n;chg();$('#un').disabled=false;$('#fm').textContent='انجام شد: '+F[+b.dataset.i][0]};
+$('#un').onclick=function(){if(undo!==null){tx.value=undo;undo=null;chg();$('#un').disabled=true;$('#fm').textContent='برگردانده شد.'}};
+function chg(){sv('text',tx.value);stats()}
+tx.oninput=chg;
+$('#cl').onclick=function(){if(tx.value&&confirm('کل متن پاک شود؟ پیش از این، نسخه‌ای ذخیره کن اگر لازم است.')){undo=tx.value;tx.value='';chg();$('#un').disabled=false}};
+$('#cp').onclick=function(){var m=$('#cm');function ok(){m.className='msg';m.textContent='کپی شد.'}function no(){tx.select();try{document.execCommand('copy')?ok():(m.className='msg err',m.textContent='کپی نشد. متن انتخاب شده؛ دستی کپی کن.')}catch(e){m.className='msg err';m.textContent='کپی نشد. متن انتخاب شده؛ دستی کپی کن.'}}
+ if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(tx.value).then(ok,no);else no()};
+var H=ls('hist',[]);
+function hDraw(){$('#hl').innerHTML=H.length?H.map(function(h,i){return '<div class="item"><div><b>'+esc(h.n)+'</b><small>'+new Date(h.at).toLocaleDateString('fa-IR',{day:'numeric',month:'long'})+' · '+words(h.t).length+' کلمه</small></div><div class="row" style="flex:0 0 auto"><button data-o="'+i+'">باز کردن</button><button class="x" data-d="'+i+'" aria-label="حذف">✕</button></div></div>'}).join(''):'<div class="empty">نسخه‌ای ذخیره نشده. متنت را بنویس و «ذخیره‌ی نسخه» را بزن.</div>'}
+$('#hs').onclick=function(){if(!tx.value.trim()){alert('اول در صفحه‌ی «متن» چیزی بنویس.');return}var n=$('#hn').value.trim()||tx.value.trim().slice(0,28);H.unshift({n:n,t:tx.value,at:Date.now()});H=H.slice(0,30);sv('hist',H);$('#hn').value='';hDraw()};
+$('#hl').onclick=function(e){var o=e.target.closest('[data-o]'),d=e.target.closest('[data-d]');
+ if(o){undo=tx.value;tx.value=H[+o.dataset.o].t;chg();go('txt')}
+ if(d&&confirm('این نسخه حذف شود؟')){H.splice(+d.dataset.d,1);sv('hist',H);hDraw()}};
+function net(){var n=$('#net');n.textContent=navigator.onLine?'آنلاین':'آفلاین';n.style.color=navigator.onLine?'var(--acc)':'var(--tx2)'}
+addEventListener('online',net);addEventListener('offline',net);net();
+function onTab(t){if(t==='ana'){kwDraw();$('#sm').textContent=''}if(t==='his')hDraw();if(t==='fmt'){$('#fm').textContent=''}}
+stats();
+
+</script>
+</body>
+</html>

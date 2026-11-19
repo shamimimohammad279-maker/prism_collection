@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>پازل رنگین‌کمان</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    overflow: hidden;
+  }
+  h1 {
+    font-size: 2.2rem;
+    margin-bottom: 10px;
+    background: linear-gradient(90deg, #ff6b6b, #feca57, #48dbfb, #ff9ff3);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 0 30px rgba(255,255,255,0.1);
+  }
+  .info {
+    display: flex;
+    gap: 30px;
+    margin-bottom: 20px;
+    font-size: 1.1rem;
+  }
+  .info span { color: #feca57; font-weight: bold; }
+  #board {
+    display: grid;
+    grid-template-columns: repeat(4, 90px);
+    grid-template-rows: repeat(4, 90px);
+    gap: 8px;
+    background: rgba(255,255,255,0.05);
+    padding: 15px;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  }
+  .tile {
+    border-radius: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    font-weight: bold;
+    transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    user-select: none;
+  }
+  .tile:hover { transform: scale(1.08); }
+  .tile.empty {
+    background: transparent;
+    box-shadow: inset 0 0 20px rgba(255,255,255,0.05);
+    cursor: default;
+  }
+  .tile.empty:hover { transform: none; }
+  .controls { margin-top: 25px; display: flex; gap: 15px; }
+  button {
+    padding: 12px 30px;
+    font-size: 1rem;
+    font-family: inherit;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s;
+  }
+  .btn-shuffle {
+    background: linear-gradient(90deg, #ff6b6b, #ee5253);
+    color: white;
+    box-shadow: 0 5px 20px rgba(238,82,83,0.4);
+  }
+  .btn-shuffle:hover { transform: translateY(-3px); box-shadow: 0 8px 30px rgba(238,82,83,0.6); }
+  .btn-hint {
+    background: linear-gradient(90deg, #48dbfb, #0abde3);
+    color: #1a1a2e;
+    box-shadow: 0 5px 20px rgba(72,219,251,0.4);
+  }
+  .btn-hint:hover { transform: translateY(-3px); }
+  #message {
+    margin-top: 20px;
+    font-size: 1.3rem;
+    color: #2ecc71;
+    font-weight: bold;
+    opacity: 0;
+    transition: opacity 0.5s;
+    text-shadow: 0 0 20px rgba(46,204,113,0.5);
+  }
+  .confetti {
+    position: fixed;
+    width: 10px;
+    height: 10px;
+    pointer-events: none;
+    z-index: 1000;
+  }
+  @media (max-width: 500px) {
+    #board { grid-template-columns: repeat(4, 70px); grid-template-rows: repeat(4, 70px); }
+    .tile { font-size: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<h1>🧩 پازل رنگین‌کمان</h1>
+<div class="info">
+  <div>حرکات: <span id="moves">0</span></div>
+  <div>زمان: <span id="timer">0</span> ثانیه</div>
+</div>
+
+<div id="board"></div>
+
+<div class="controls">
+  <button class="btn-shuffle" onclick="shuffle()">🔀 مخلوط کن</button>
+  <button class="btn-hint" onclick="showHint()">💡 راهنما</button>
+</div>
+
+<div id="message">🎉 آفرین! پازل را حل کردی!</div>
+
+<script>
+const SIZE = 4;
+const TOTAL = SIZE * SIZE;
+let tiles = [];
+let moves = 0;
+let seconds = 0;
+let timerInterval = null;
+let gameStarted = false;
+
+// رنگ‌های گرادیانتی برای هر خانه
+const colors = [
+  '#ff6b6b','#ff9e7d','#feca57','#48dbfb',
+  '#1dd1a1','#ff9ff3','#54a0ff','#5f27cd',
+  '#ff6348','#2ed573','#eccc68','#7d5fff',
+  '#ff4757','#3742fa','#2f3542','#a4b0be'
+];
+
+function init() {
+  tiles = Array.from({length: TOTAL}, (_, i) => i === TOTAL - 1 ? 0 : i + 1);
+  moves = 0;
+  seconds = 0;
+  gameStarted = false;
+  clearInterval(timerInterval);
+  document.getElementById('moves').textContent = '0';
+  document.getElementById('timer').textContent = '0';
+  document.getElementById('message').style.opacity = '0';
+  render();
+}
+
+function render() {
+  const board = document.getElementById('board');
+  board.innerHTML = '';
+  tiles.forEach((num, idx) => {
+    const div = document.createElement('div');
+    div.className = 'tile' + (num === 0 ? ' empty' : '');
+    if (num !== 0) {
+      div.textContent = num;
+      div.style.background = `linear-gradient(135deg, ${colors[(num-1) % colors.length]}, ${colors[num % colors.length]})`;
+      div.onclick = () => moveTile(idx);
+    }
+    board.appendChild(div);
+  });
+}
+
+function moveTile(idx) {
+  const emptyIdx = tiles.indexOf(0);
+  const row = Math.floor(idx / SIZE), col = idx % SIZE;
+  const eRow = Math.floor(emptyIdx / SIZE), eCol = emptyIdx % SIZE;
+
+  // فقط خانه‌های مجاور قابل حرکتند
+  if ((Math.abs(row - eRow) === 1 && col === eCol) ||
+      (Math.abs(col - eCol) === 1 && row === eRow)) {
+
+    if (!gameStarted) {
+      gameStarted = true;
+      timerInterval = setInterval(() => {
+        seconds++;
+        document.getElementById('timer').textContent = seconds;
+      }, 1000);
+    }
+
+    [tiles[idx], tiles[emptyIdx]] = [tiles[emptyIdx], tiles[idx]];
+    moves++;
+    document.getElementById('moves').textContent = moves;
+    render();
+    checkWin();
+  }
+}
+
+function shuffle() {
+  // الگوریتم Fisher-Yates برای مخلوط‌کردن واقعی
+  for (let i = tiles.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [tiles[i], tiles[j]] = [tiles[j], tiles[i]];
+  }
+  // تضمین اینکه پازل قابل حل باشد
+  if (!isSolvable()) {
+    // تعویض دو خانه غیر خالی
+    const idx1 = tiles.findIndex(t => t !== 0);
+    const idx2 = tiles.findIndex((t, i) => t !== 0 && i !== idx1);
+    [tiles[idx1], tiles[idx2]] = [tiles[idx2], tiles[idx1]];
+  }
+  moves = 0;
+  seconds = 0;
+  gameStarted = false;
+  clearInterval(timerInterval);
+  document.getElementById('moves').textContent = '0';
+  document.getElementById('timer').textContent = '0';
+  document.getElementById('message').style.opacity = '0';
+  render();
+}
+
+function isSolvable() {
+  let inversions = 0;
+  const arr = tiles.filter(t => t !== 0);
+  for (let i = 0; i < arr.length; i++) {
+    for (let j = i + 1; j < arr.length; j++) {
+      if (arr[i] > arr[j]) inversions++;
+    }
+  }
+  const emptyRow = Math.floor(tiles.indexOf(0) / SIZE);
+  return (inversions + emptyRow) % 2 === 0;
+}
+
+function showHint() {
+  const emptyIdx = tiles.indexOf(0);
+  const eRow = Math.floor(emptyIdx / SIZE), eCol = emptyIdx % SIZE;
+  const neighbors = [];
+  if (eRow > 0) neighbors.push(emptyIdx - SIZE);
+  if (eRow < SIZE - 1) neighbors.push(emptyIdx + SIZE);
+  if (eCol > 0) neighbors.push(emptyIdx - 1);
+  if (eCol < SIZE - 1) neighbors.push(emptyIdx + 1);
+
+  // پیدا کردن خانه‌ای که باید جای خالی باشد
+  const correct = neighbors.find(i => tiles[i] === i + 1);
+  const target = correct !== undefined ? correct : neighbors[0];
+
+  const tileDivs = document.querySelectorAll('.tile');
+  tileDivs[target].style.transform = 'scale(1.15)';
+  tileDivs[target].style.boxShadow = '0 0 30px rgba(255,255,255,0.8)';
+  setTimeout(() => {
+    tileDivs[target].style.transform = '';
+    tileDivs[target].style.boxShadow = '';
+  }, 800);
+}
+
+function checkWin() {
+  for (let i = 0; i < TOTAL - 1; i++) {
+    if (tiles[i] !== i + 1) return;
+  }
+  clearInterval(timerInterval);
+  document.getElementById('message').style.opacity = '1';
+  createConfetti();
+}
+
+function createConfetti() {
+  const colorsConf = ['#ff6b6b','#feca57','#48dbfb','#2ecc71','#ff9ff3'];
+  for (let i = 0; i < 100; i++) {
+    setTimeout(() => {
+      const c = document.createElement('div');
+      c.className = 'confetti';
+      c.style.background = colorsConf[Math.floor(Math.random() * colorsConf.length)];
+      c.style.left = Math.random() * 100 + 'vw';
+      c.style.top = '-10px';
+      c.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+      document.body.appendChild(c);
+      const duration = 2000 + Math.random() * 2000;
+      c.animate([
+        { transform: 'translateY(0) rotate(0deg)', opacity: 1 },
+        { transform: `translateY(100vh) rotate(${Math.random() * 720}deg)`, opacity: 0 }
+      ], { duration, easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)' });
+      setTimeout(() => c.remove(), duration);
+    }, i * 20);
+  }
+}
+
+// شروع بازی
+init();
+// مخلوط‌کردن خودکار در بارگذاری
+setTimeout(shuffle, 500);
+</script>
+
+</body>
+</html>

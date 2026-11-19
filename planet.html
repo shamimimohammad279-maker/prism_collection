@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Planet Lab — 3D Planet &amp; Universe Creator</title>
+<style>
+html,body{margin:0;height:100%;background:#02030a;color-scheme:dark}
+#plab{position:fixed;inset:0;background:radial-gradient(ellipse at 50% 40%,#0a1030,#02030a 70%);color:#dfe9ff;font:13px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;overflow:hidden;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent;--cy:#5fe3ff;--vi:#9b7bff;--go:#e8c26a}
+#plab canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none;cursor:grab}
+#plab canvas:active{cursor:grabbing}
+#plab .glass{background:rgba(9,14,36,.58);-webkit-backdrop-filter:blur(16px) saturate(1.4);backdrop-filter:blur(16px) saturate(1.4);border:1px solid rgba(120,200,255,.16);border-radius:16px;box-shadow:0 10px 40px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.06)}
+#plab .bar{position:absolute;top:calc(10px + env(safe-area-inset-top,0px));left:12px;right:12px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:8px 10px;z-index:5}
+#plab .brand{font-weight:600;letter-spacing:.22em;font-size:12px;text-transform:uppercase;margin-right:auto;background:linear-gradient(90deg,var(--cy),var(--vi),var(--go));-webkit-background-clip:text;background-clip:text;color:transparent;white-space:nowrap}
+#plab button{font:inherit;color:#dfe9ff;background:rgba(120,170,255,.08);border:1px solid rgba(120,200,255,.2);border-radius:10px;padding:7px 11px;cursor:pointer;transition:.2s;white-space:nowrap}
+#plab button:hover{background:rgba(95,227,255,.16);border-color:var(--cy)}
+#plab button:active{transform:scale(.96)}
+#plab button.pri{background:linear-gradient(120deg,rgba(95,227,255,.35),rgba(155,123,255,.4));border-color:rgba(155,123,255,.6)}
+#plab .seg{display:flex;border:1px solid rgba(120,200,255,.2);border-radius:10px;overflow:hidden}
+#plab .seg button{border:0;border-radius:0;background:none}
+#plab .seg button.on{background:rgba(95,227,255,.22);color:#fff}
+#plab .panel{position:absolute;left:12px;top:calc(68px + env(safe-area-inset-top,0px));bottom:calc(12px + env(safe-area-inset-bottom,0px));width:316px;overflow:auto;padding:12px;z-index:4;transition:.35s;overscroll-behavior:contain;touch-action:pan-y}
+#plab.obs .panel{opacity:0;transform:translateX(-30px);pointer-events:none}
+#plab .tabs{display:flex;gap:4px;margin-bottom:10px;position:sticky;top:-12px;padding:12px 0 6px;margin-top:-12px;z-index:2;background:linear-gradient(rgba(12,18,42,.95),rgba(12,18,42,.7))}
+#plab .tabs button{flex:1;padding:6px 2px;font-size:12px}
+#plab .tabs button.on{background:rgba(155,123,255,.3);border-color:var(--vi)}
+#plab .pane{display:none}#plab .pane.on{display:block}
+#plab .row{display:grid;grid-template-columns:1fr auto;gap:2px 8px;align-items:center;margin:0 0 11px;color:#a9bbe0;font-size:12px}
+#plab .row output{color:var(--cy);font-variant-numeric:tabular-nums}
+#plab .row input[type=range]{grid-column:1/3;width:100%;margin:2px 0 0;accent-color:var(--cy);height:22px}
+#plab .row.c input{justify-self:end}
+#plab input[type=color]{width:44px;height:26px;border:1px solid rgba(255,255,255,.25);border-radius:7px;background:none;padding:0}
+#plab input[type=text]{grid-column:1/3;background:rgba(0,0,0,.3);border:1px solid rgba(120,200,255,.2);color:#fff;border-radius:8px;padding:7px;font:inherit;-webkit-user-select:text;user-select:text}
+#plab input[type=checkbox]{width:38px;height:20px;appearance:none;-webkit-appearance:none;background:rgba(255,255,255,.14);border-radius:20px;position:relative;cursor:pointer;transition:.2s}
+#plab input[type=checkbox]::after{content:"";position:absolute;left:2px;top:2px;width:16px;height:16px;border-radius:50%;background:#fff;transition:.2s}
+#plab input[type=checkbox]:checked{background:var(--vi)}#plab input[type=checkbox]:checked::after{left:20px}
+#plab .chips{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:12px}
+#plab .chips button{text-align:left;padding:9px}
+#plab .chips button.on{border-color:var(--go);background:rgba(232,194,106,.14)}
+#plab .chips i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:7px;vertical-align:-1px}
+#plab h4{margin:14px 0 8px;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--go);font-weight:600}
+#plab .info{position:absolute;right:12px;top:calc(68px + env(safe-area-inset-top,0px));width:228px;padding:12px 14px;z-index:3;transition:.3s}
+#plab.noinfo .info{opacity:0;pointer-events:none;transform:translateY(-8px)}
+#plab .info h3{margin:0;font-size:17px;font-weight:600;letter-spacing:.04em}
+#plab .info p{margin:2px 0 8px;color:var(--cy);font-size:11px;letter-spacing:.12em;text-transform:uppercase}
+#plab .info dl{display:grid;grid-template-columns:auto 1fr;gap:3px 10px;margin:0;font-size:12px}
+#plab .info dt{color:#7f92bd}#plab .info dd{margin:0;text-align:right;font-variant-numeric:tabular-nums}
+#plab .hint{position:absolute;bottom:calc(14px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);color:#7f92bd;font-size:11px;letter-spacing:.15em;text-transform:uppercase;pointer-events:none;transition:opacity 1.5s;text-align:center;width:max-content;max-width:90%}
+#plab .toast{position:absolute;bottom:calc(70px + env(safe-area-inset-bottom,0px));left:50%;transform:translate(-50%,10px);padding:9px 16px;border-radius:12px;opacity:0;transition:.3s;z-index:9;pointer-events:none;background:rgba(10,16,38,.9);border:1px solid var(--cy)}
+#plab .toast.on{opacity:1;transform:translate(-50%,0)}
+#plab .fail{position:absolute;inset:0;display:none;align-items:center;justify-content:center;text-align:center;padding:30px;z-index:20;background:#02030a;color:#cfe}
+#plab.gas .ng{display:none}
+@media(max-width:760px){
+#plab .brand{flex:1 0 100%}#plab .bar{gap:6px;padding:7px}#plab button{padding:6px 9px}#plab .lbl{display:none}
+#plab .panel{top:auto;left:8px;right:8px;width:auto;height:42vh;bottom:calc(8px + env(safe-area-inset-bottom,0px))}
+#plab .info{top:calc(112px + env(safe-area-inset-top,0px));right:8px;width:190px;padding:9px 11px}
+#plab .hint{display:none}}
+</style></head>
+<body>
+<div id="plab" class="gas0">
+<canvas></canvas>
+<div class="bar glass">
+ <div class="brand">Planet Lab</div>
+ <button class="pri" data-a="create">✦<span class="lbl"> Create</span><span class="lbl2"></span></button>
+ <button data-a="random">⚄<span class="lbl"> Random</span></button>
+ <button data-a="reset">↺<span class="lbl"> Reset</span></button>
+ <button data-a="cam" title="Reset camera">◎<span class="lbl"> Camera</span></button>
+ <button data-a="info" title="Info panel">ⓘ</button>
+ <button data-a="fs" title="Fullscreen">⛶</button>
+ <div class="seg"><button class="on" data-m="edit">Edit</button><button data-m="obs">Observe</button></div>
+</div>
+<div class="panel glass">
+ <div class="tabs"><button class="on" data-tab="0">Type</button><button data-tab="1">Surface</button><button data-tab="2">Sky</button><button data-tab="3">Physics</button></div>
+ <div class="pane on" data-pane="0">
+  <div class="chips" id="chips"></div>
+  <label class="row"><span>Planet name</span><input type="text" data-k="name" maxlength="24"></label>
+  <h4>Orbiting bodies</h4>
+  <label class="row c"><span>Planetary rings</span><input type="checkbox" data-k="ring"></label>
+  <label class="row c"><span>Moon</span><input type="checkbox" data-k="moon"></label>
+  <button data-a="seed" style="width:100%">⟳ Regenerate terrain seed</button>
+ </div>
+ <div class="pane" data-pane="1">
+  <h4>Colors</h4>
+  <label class="row c"><span id="l1">Lowlands</span><input type="color" data-k="c1"></label>
+  <label class="row c"><span id="l2">Highlands</span><input type="color" data-k="c2"></label>
+  <label class="row c"><span id="l3">Liquid / accent</span><input type="color" data-k="c3"></label>
+  <h4>Terrain</h4>
+  <label class="row ng"><span id="lsea">Ocean coverage</span><output data-o="sea"></output><input type="range" data-k="sea" min="0" max="1" step="0.01"></label>
+  <label class="row"><span id="ltex">Surface texture</span><output data-o="tex"></output><input type="range" data-k="tex" min="0.5" max="2.5" step="0.05"></label>
+  <label class="row ng"><span>Mountains</span><output data-o="mtn"></output><input type="range" data-k="mtn" min="0" max="1" step="0.01"></label>
+  <label class="row ng"><span>Craters</span><output data-o="crat"></output><input type="range" data-k="crat" min="0" max="1" step="0.01"></label>
+  <h4>Rings</h4>
+  <label class="row c"><span>Ring color</span><input type="color" data-k="rc"></label>
+  <label class="row"><span>Ring distance</span><output data-o="rIn"></output><input type="range" data-k="rIn" min="1.2" max="2.4" step="0.01"></label>
+  <label class="row"><span>Ring width</span><output data-o="rW"></output><input type="range" data-k="rW" min="0.2" max="1.4" step="0.01"></label>
+ </div>
+ <div class="pane" data-pane="2">
+  <label class="row ng"><span>Cloud coverage</span><output data-o="cloud"></output><input type="range" data-k="cloud" min="0" max="1" step="0.01"></label>
+  <label class="row c"><span>Atmosphere color</span><input type="color" data-k="atmC"></label>
+  <label class="row"><span>Atmosphere thickness</span><output data-o="atm"></output><input type="range" data-k="atm" min="0" max="1" step="0.01"></label>
+ </div>
+ <div class="pane" data-pane="3">
+  <label class="row"><span>Radius</span><output data-o="R"></output><input type="range" data-k="R" min="0.3" max="12" step="0.05"></label>
+  <label class="row"><span>Rotation speed</span><output data-o="rot"></output><input type="range" data-k="rot" min="0" max="6" step="0.05"></label>
+  <label class="row"><span>Axial tilt</span><output data-o="tilt"></output><input type="range" data-k="tilt" min="0" max="98" step="1"></label>
+  <label class="row"><span>Orbital speed</span><output data-o="orb"></output><input type="range" data-k="orb" min="0" max="5" step="0.05"></label>
+  <label class="row"><span>Gravity</span><output data-o="g"></output><input type="range" data-k="g" min="0.1" max="4" step="0.05"></label>
+  <label class="row"><span>Temperature</span><output data-o="temp"></output><input type="range" data-k="temp" min="50" max="1200" step="5"></label>
+  <h4>Camera</h4>
+  <label class="row c"><span>Auto-orbit camera</span><input type="checkbox" data-k="auto"></label>
+ </div>
+</div>
+<div class="info glass"></div>
+<div class="hint">Drag to rotate · Pinch or scroll to zoom</div>
+<div class="toast"></div>
+<div class="fail"></div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function(){'use strict';
+const root=document.getElementById('plab'),Q=s=>root.querySelector(s),QA=s=>[...root.querySelectorAll(s)];
+const mobile=matchMedia('(pointer:coarse)').matches||innerWidth<700;
+const toastEl=Q('.toast');let tt;
+function toast(m){toastEl.textContent=m;toastEl.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>toastEl.classList.remove('on'),2300)}
+function fail(m){const f=Q('.fail');f.innerHTML='<div><b>Planet Lab couldn’t start</b><br><br>'+m+'</div>';f.style.display='flex'}
+if(!window.THREE){fail('Three.js failed to load. Check your connection and reload.');return}
+const cv=Q('canvas');let renderer;
+try{renderer=new THREE.WebGLRenderer({canvas:cv,antialias:!mobile,powerPreference:'high-performance'})}catch(e){fail('WebGL isn’t available in this browser.');return}
+let pr=Math.min(window.devicePixelRatio||1,mobile?1.5:2);renderer.setPixelRatio(pr);
+cv.addEventListener('webglcontextlost',e=>{e.preventDefault();toast('Graphics context lost — reload the page')});
+
+/* ---------- presets & state ---------- */
+const TN=['Rocky','Ocean','Desert','Ice','Gas giant','Volcanic'],DOT=['#9a8a7c','#2f7fd0','#d9a55e','#bfe4ff','#c9a37a','#ff5a1f'];
+const CC=['#e8eef7','#ffffff','#d9b58a','#f4fbff','#ffffff','#5a4c46'];
+const P=[
+{c1:'#6e5f55',c2:'#b9aa9b',c3:'#2f5f8f',sea:.12,tex:1.2,mtn:.7,crat:.65,cloud:.08,atmC:'#9bb8ff',atm:.25,ring:false,rc:'#cbbfae',rIn:1.4,rW:.6,R:.9,rot:1,tilt:12,orb:1,g:.9,temp:260},
+{c1:'#3f7a3d',c2:'#a99876',c3:'#1b5fbf',sea:.55,tex:1,mtn:.45,crat:0,cloud:.5,atmC:'#5aa8ff',atm:.6,ring:false,rc:'#cbbfae',rIn:1.4,rW:.6,R:1,rot:1,tilt:23,orb:1,g:1,temp:288},
+{c1:'#c98b4e',c2:'#ecc88c',c3:'#4f8a86',sea:.06,tex:1.1,mtn:.4,crat:.15,cloud:.1,atmC:'#ffb070',atm:.35,ring:false,rc:'#d8b888',rIn:1.4,rW:.6,R:.9,rot:.9,tilt:15,orb:1.2,g:.9,temp:340},
+{c1:'#cfe6f5',c2:'#ffffff',c3:'#7fb8e6',sea:.4,tex:1.3,mtn:.5,crat:.3,cloud:.3,atmC:'#bfe6ff',atm:.35,ring:false,rc:'#e3f3ff',rIn:1.5,rW:.7,R:.8,rot:.7,tilt:28,orb:.6,g:.8,temp:200},
+{c1:'#d9b38a',c2:'#8a5a3a',c3:'#c4553a',sea:0,tex:1,mtn:0,crat:0,cloud:0,atmC:'#ffd9a0',atm:.5,ring:true,rc:'#cfae86',rIn:1.35,rW:.9,R:9,rot:3,tilt:27,orb:.3,g:2.4,temp:130},
+{c1:'#2a1d1a',c2:'#5a4338',c3:'#ff5a14',sea:.35,tex:1.2,mtn:.8,crat:.3,cloud:.4,atmC:'#ff7a3d',atm:.45,ring:false,rc:'#8a6a58',rIn:1.4,rW:.6,R:1.1,rot:.8,tilt:5,orb:1.4,g:1.2,temp:900}];
+const LB={0:['Lowlands','Highlands','Water','Sea coverage','Surface texture'],1:['Lowlands','Highlands','Ocean','Ocean coverage','Continent scale'],2:['Dunes','Rock','Oasis / salt','Oasis coverage','Dune scale'],3:['Ice plains','Snow peaks','Frozen sea','Frozen sea','Crack scale'],4:['Band color A','Band color B','Storm color','','Band count'],5:['Crust','Ridges','Lava','Lava coverage','Rock scale']};
+const S={name:'Aurelia',type:1,moon:true,auto:false};
+const rnd=(a,b)=>a+Math.random()*(b-a),clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
+const sd=()=>[rnd(0,40),rnd(0,40),rnd(0,40)];S.seed=[7.3,21.1,3.9];
+function load(t){Object.assign(S,P[t],{type:t})}load(1);
+
+/* ---------- shaders ---------- */
+const COMMON=`precision highp float;
+uniform vec3 uSun,uCam,uC1,uC2,uC3,uAtmC,uSeed,uRingC,uCloudC;
+uniform float uTime,uSpin,uSpinC,uSea,uMtn,uCrat,uScale,uAtm,uTemp,uType,uBands,uRingOn,uRIn,uROut,uCloud;
+float hash(vec3 p){p=fract(p*0.3183099+.1);p*=17.;return fract(p.x*p.y*p.z*(p.x+p.y+p.z));}
+float noise(vec3 x){vec3 i=floor(x),f=fract(x);f=f*f*(3.-2.*f);
+return mix(mix(mix(hash(i),hash(i+vec3(1,0,0)),f.x),mix(hash(i+vec3(0,1,0)),hash(i+vec3(1,1,0)),f.x),f.y),
+mix(mix(hash(i+vec3(0,0,1)),hash(i+vec3(1,0,1)),f.x),mix(hash(i+vec3(0,1,1)),hash(i+vec3(1,1,1)),f.x),f.y),f.z);}
+float fbm(vec3 p){float a=.5,s=0.;for(int i=0;i<OCT;i++){s+=a*noise(p);p=p*2.02+vec3(1.7,9.2,3.1);a*=.5;}return s;}
+float ringD(float r){float t=(r-uRIn)/(uROut-uRIn);if(t<0.||t>1.)return 0.;
+float n=noise(vec3(t*70.,uSeed.x*9.,0.)),n2=noise(vec3(t*18.,3.,uSeed.y*5.));
+float d=(.25+.75*n)*(.45+.55*n2)*smoothstep(0.,.06,t)*smoothstep(1.,.88,t);
+d*=1.-.95*smoothstep(.035,0.,abs(t-(.55+.1*uSeed.z/40.)));return clamp(d*1.6,0.,1.);}
+vec3 rotY(vec3 v,float a){float c=cos(a),s=sin(a);return vec3(c*v.x+s*v.z,v.y,-s*v.x+c*v.z);}
+float craters(vec3 p){vec3 q=p*4.5,i=floor(q);float h=0.;
+for(int x=-1;x<=1;x++)for(int y=-1;y<=1;y++)for(int z=-1;z<=1;z++){vec3 c=i+vec3(float(x),float(y),float(z));
+if(hash(c+9.9)<.55){vec3 cc=c+vec3(hash(c),hash(c+7.1),hash(c+13.7));float r=.16+.3*hash(c+3.3);float d=length(q-cc)/r;
+h+=-smoothstep(1.,0.,d)*.8+smoothstep(.8,1.,d)*smoothstep(1.45,1.,d)*.4;}}return h;}
+float height(vec3 p){float b=fbm(p*2.2*uScale+uSeed);float r=1.-abs(2.*fbm(p*5.*uScale+uSeed.zxy)-1.);
+float h=b+uMtn*.45*(r*r-.35)*smoothstep(0.,.5,b-.15);if(uCrat>.01)h+=uCrat*.14*craters(p);return h;}`;
+const VS=`varying vec3 vP,vN,vNv;void main(){vP=position;vN=normal;vNv=normalMatrix*normal;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}`;
+const PFS=COMMON+`varying vec3 vP,vN,vNv;
+void main(){vec3 p=rotY(vP,uSpin),N0=normalize(vN),N=N0,V=normalize(uCam-vP),L=normalize(uSun);
+bool gas=uType>3.5&&uType<4.5;bool vol=uType>4.5;bool ice=abs(uType-3.)<.5;
+float frost=clamp((275.-uTemp)/120.,0.,1.),hot=clamp((uTemp-500.)/500.,0.,1.);
+vec3 col,em=vec3(0.);float spec=0.;
+if(gas){float lat=p.y;float w=fbm(vec3(p.x*2.,p.y*6.,p.z*2.)+uSeed+vec3(0.,0.,uTime*.02));
+float b=sin((lat+.12*w)*uBands+3.*w)*.5+.5;float b2=fbm(vec3(0.,lat*uBands*.6,0.)+uSeed+w*.8);
+col=mix(uC1,uC2,smoothstep(.25,.75,mix(b,b2,.5)));col*=.88+.3*noise(p*vec3(20.,60.,20.));
+float dl=mod(atan(p.z,p.x)-1.+3.14159,6.28318)-3.14159;vec2 q=vec2(dl*.55,(lat+.32)*2.6);
+float sp=smoothstep(.42,.12,length(q)+.08*w);float sw=.5+.5*sin(atan(q.y,q.x)*3.+length(q)*14.);
+col=mix(col,mix(uC3,uC3*1.3,sw),sp*.85);col*=1.-.35*pow(abs(lat),4.);col=mix(col,col*vec3(1.3,.8,.6),hot*.4);}
+else{float h=height(p);float lvl=.28+.4*uSea;float land=smoothstep(lvl-.012,lvl+.012,h);
+float det=fbm(p*18.+uSeed);vec3 lc=mix(uC1,uC2,smoothstep(lvl,lvl+.32,h));lc*=.8+.4*det;
+if(abs(uType-2.)<.5)lc*=.9+.1*sin((p.y+.15*fbm(p*4.))*60.*uScale+det*3.);
+float fr=clamp(frost*(.5+abs(p.y)*2.)+(h-lvl-.2)*frost*2.,0.,1.);lc=mix(lc,vec3(.93,.96,1.),fr);
+lc=mix(lc,lc*vec3(1.4,.7,.4),hot*.5);
+vec3 wc=mix(uC3*.35,uC3,smoothstep(lvl-.3,lvl,h));
+if(vol)wc=uC3*(.7+1.3*noise(p*25.+uTime*.25));
+if(ice){float cr=smoothstep(.02,0.,abs(fbm(p*5.*uScale+uSeed.zxy*2.)-.5));lc=mix(lc,uC3*.7,cr*.7);wc=mix(mix(uC3,vec3(.9,.97,1.),.45)*(.8+.3*det),uC3*.6,cr*.8);}
+wc=mix(wc,vec3(.9,.97,1.),frost*.7*(1.-vol?1.:0.));
+float vein=smoothstep(.035,0.,abs(fbm(p*6.+uSeed)-.5));vec3 vc=vol?uC3:vec3(1.,.4,.1);
+float va=vol?1.:hot*.7;em+=vc*vein*va*1.4*land;if(vol)em+=wc*(1.-land)*1.1;
+col=mix(wc,lc,land);spec=(1.-land)*(vol?0.:1.)*(ice?.5:1.)*(1.-frost*.6);
+float hb=max(h,lvl);vec3 dpx=dFdx(vP),dpy=dFdy(vP);vec3 r1=cross(dpy,N0),r2=cross(N0,dpx);float det2=dot(dpx,r1);
+float k=.25+.5*uMtn+.2*uCrat;N=normalize(abs(det2)*N0-k*sign(det2)*(dFdx(hb)*r1+dFdy(hb)*r2));}
+float nl=dot(N,L);float diff=max(nl,0.)*smoothstep(-.05,.2,dot(N0,L));
+if(uRingOn>.5&&abs(L.y)>.001){float t=-vP.y/L.y;if(t>0.){vec3 hp=vP+L*t;diff*=1.-.85*ringD(length(hp.xz));}}
+vec3 c=col*(diff*vec3(1.05,1.,.95)+uAtmC*.035*uAtm+.012);
+vec3 H=normalize(L+V);c+=spec*pow(max(dot(N,H),0.),90.)*diff*.9;
+c+=em*(1.-diff*.6);
+float rim=pow(1.-max(dot(N0,V),0.),3.);float lit=smoothstep(-.3,.5,dot(N0,L));
+c+=uAtmC*rim*uAtm*(.12+1.1*lit);
+gl_FragColor=vec4(1.-exp(-1.4*c),1.);}`;
+const CFS=COMMON+`varying vec3 vP,vN,vNv;
+void main(){vec3 p=rotY(vP,uSpinC),N=normalize(vN),L=normalize(uSun);
+float n=fbm(p*3.2*vec3(1.,1.4,1.)+uSeed+vec3(0.,0.,uTime*.01));
+float a=smoothstep(1.-uCloud,1.-uCloud+.22,n)*.92;if(a<.01)discard;
+float diff=smoothstep(-.12,.5,dot(N,L));vec3 c=uCloudC*(.06+.95*diff)*(.75+.5*n)+uAtmC*.03;
+gl_FragColor=vec4(1.-exp(-1.4*c),a);}`;
+const AFS=COMMON+`varying vec3 vP,vN,vNv;
+void main(){float k=clamp(-normalize(vNv).z,0.,1.);float g=pow(k,2.2)*3.2*uAtm;
+float lit=.12+.88*smoothstep(-.4,.45,dot(normalize(vP),normalize(uSun)));gl_FragColor=vec4(uAtmC*g*lit,1.);}`;
+const RFS=COMMON+`varying vec3 vP,vN,vNv;
+void main(){float r=length(vP.xz);float d=ringD(r);if(d<.02)discard;vec3 L=normalize(uSun);
+float b=dot(vP,L),c=dot(vP,vP)-1.;float sh=step(b,0.)*smoothstep(0.,.1,b*b-c);
+float t=(r-uRIn)/(uROut-uRIn);vec3 col=uRingC*(.65+.5*noise(vec3(t*40.,1.,2.)));col*=(1.-.9*sh)*.95+.05;
+gl_FragColor=vec4(col,d*.88);}`;
+const STV=`attribute float size;attribute vec3 col;varying vec3 vC;uniform float uTime,uPx;
+void main(){vC=col*(.75+.25*sin(uTime*1.5+position.x*.37+size*40.));gl_PointSize=size*uPx;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}`;
+const STF=`precision highp float;varying vec3 vC;void main(){float d=length(gl_PointCoord-.5);float a=smoothstep(.5,0.,d);gl_FragColor=vec4(vC,a*a);}`;
+
+/* ---------- scene ---------- */
+const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(45,1,.1,3000);
+const V3=(x,y,z)=>new THREE.Vector3(x,y,z),CL=()=>new THREE.Color();
+const U={uSun:{value:V3(1,0,0)},uCam:{value:V3(0,0,5)},uC1:{value:CL()},uC2:{value:CL()},uC3:{value:CL()},uAtmC:{value:CL()},uSeed:{value:V3(7,21,4)},uRingC:{value:CL()},uCloudC:{value:CL()},
+uTime:{value:0},uSpin:{value:0},uSpinC:{value:0},uSea:{value:.5},uMtn:{value:.5},uCrat:{value:0},uScale:{value:1},uAtm:{value:.5},uTemp:{value:288},uType:{value:1},uBands:{value:12},uRingOn:{value:0},uRIn:{value:1.4},uROut:{value:2},uCloud:{value:.4}};
+const SUNW=V3(1,.28,.55).normalize();
+const mk=(fs,o)=>new THREE.ShaderMaterial(Object.assign({uniforms:U,vertexShader:VS,fragmentShader:fs,defines:{OCT:mobile?4:5}},o));
+const grp=new THREE.Group();scene.add(grp);
+const planet=new THREE.Mesh(new THREE.SphereGeometry(1,mobile?96:160,mobile?64:110),mk(PFS,{extensions:{derivatives:true}}));grp.add(planet);
+const clouds=new THREE.Mesh(new THREE.SphereGeometry(1.012,mobile?72:112,mobile?48:80),mk(CFS,{transparent:true,depthWrite:false}));clouds.renderOrder=2;grp.add(clouds);
+const atmos=new THREE.Mesh(new THREE.SphereGeometry(1,64,48),mk(AFS,{side:THREE.BackSide,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false}));atmos.renderOrder=3;grp.add(atmos);
+const ring=new THREE.Mesh(new THREE.BufferGeometry(),mk(RFS,{side:THREE.DoubleSide,transparent:true,depthWrite:false}));ring.renderOrder=1;grp.add(ring);
+let ringKey='';
+/* moon */
+const mg=new THREE.IcosahedronGeometry(1,3);{const a=mg.attributes.position,v=V3(0,0,0);for(let i=0;i<a.count;i++){v.fromBufferAttribute(a,i);const k=1+.07*Math.sin(v.x*7.1)*Math.cos(v.y*6.3+v.z*4.)+.03*Math.sin(v.z*17.);a.setXYZ(i,v.x*k,v.y*k,v.z*k)}mg.computeVertexNormals()}
+const moon=new THREE.Mesh(mg,new THREE.MeshStandardMaterial({color:0x9c9a96,roughness:1,metalness:0}));scene.add(moon);
+const dl=new THREE.DirectionalLight(0xfff2dd,2.3);dl.position.copy(SUNW).multiplyScalar(50);scene.add(dl,new THREE.AmbientLight(0x223355,.4));
+/* backdrop */
+const bg=new THREE.Group();scene.add(bg);
+const stMat=new THREE.ShaderMaterial({uniforms:{uTime:U.uTime,uPx:{value:pr}},vertexShader:STV,fragmentShader:STF,transparent:true,depthWrite:false,blending:THREE.AdditiveBlending});
+function pts(n,fn){const p=new Float32Array(n*3),c=new Float32Array(n*3),s=new Float32Array(n),o={};for(let i=0;i<n;i++){fn(i,o);p.set(o.p,i*3);c.set(o.c,i*3);s[i]=o.s}
+const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.BufferAttribute(p,3));g.setAttribute('col',new THREE.BufferAttribute(c,3));g.setAttribute('size',new THREE.BufferAttribute(s,1));const m=new THREE.Points(g,stMat);m.frustumCulled=false;return m}
+const tmpc=CL();
+bg.add(pts(mobile?2600:5000,(i,o)=>{const u=Math.random()*2-1,t=Math.random()*6.2832,r=Math.sqrt(1-u*u);o.p=[900*r*Math.cos(t),900*u,900*r*Math.sin(t)];
+tmpc.setHSL(Math.random()<.7?.6:.12,Math.random()*.5,.7+Math.random()*.3);o.c=[tmpc.r,tmpc.g,tmpc.b];o.s=Math.pow(Math.random(),3)*2.4+.7}));
+const gal=pts(mobile?1800:3200,(i,o)=>{const r=Math.pow(Math.random(),.6),a=r*5+(i%3)*2.094+Math.random()*.35,sp=(1-r)*.12+.03;
+o.p=[r*Math.cos(a)*130+(Math.random()-.5)*sp*130,(Math.random()-.5)*sp*60,r*Math.sin(a)*130+(Math.random()-.5)*sp*130];
+tmpc.setHSL(.12+r*.5,.7,.55+(1-r)*.3);o.c=[tmpc.r,tmpc.g,tmpc.b];o.s=Math.random()*2.2+.9});
+gal.position.set(-420,170,-640);gal.rotation.set(.9,.3,.4);bg.add(gal);
+function gtex(rgb){const c=document.createElement('canvas');c.width=c.height=128;const x=c.getContext('2d'),g=x.createRadialGradient(64,64,0,64,64,64);
+g.addColorStop(0,'rgba('+rgb+',1)');g.addColorStop(.35,'rgba('+rgb+',.35)');g.addColorStop(1,'rgba('+rgb+',0)');x.fillStyle=g;x.fillRect(0,0,128,128);return new THREE.CanvasTexture(c)}
+function spr(rgb,pos,sc,op){const s=new THREE.Sprite(new THREE.SpriteMaterial({map:gtex(rgb),blending:THREE.AdditiveBlending,transparent:true,depthWrite:false,opacity:op}));s.position.copy(pos);s.scale.setScalar(sc);bg.add(s);return s}
+spr('70,120,255',V3(500,-120,-650),900,.22);spr('150,90,255',V3(-300,260,-700),800,.2);spr('95,227,255',V3(150,-330,-780),700,.14);spr('232,194,106',V3(-450,-180,500),600,.08);spr('232,194,106',V3(-420,170,-640),240,.5);
+spr('255,236,200',SUNW.clone().multiplyScalar(750),260,.55);spr('255,255,255',SUNW.clone().multiplyScalar(750),50,1);
+
+/* ---------- apply state ---------- */
+let base=1,spawn=1,ringR=2;
+const tiltQ=new THREE.Quaternion(),eul=new THREE.Euler();
+const fmt={R:v=>v.toFixed(2)+' R⊕',rot:v=>v.toFixed(2)+'×',tilt:v=>v+'°',orb:v=>v.toFixed(2)+'×',g:v=>v.toFixed(2)+' g',temp:v=>Math.round(v)+' K',tex:v=>v.toFixed(2)+'×',rIn:v=>v.toFixed(2),rW:v=>v.toFixed(2)};
+const fo=(k,v)=>(fmt[k]?fmt[k](v):Math.round(v*100)+'%');
+function out(k){const o=Q('[data-o="'+k+'"]');if(o)o.textContent=fo(k,S[k])}
+function syncUI(){QA('[data-k]').forEach(e=>{const k=e.dataset.k;if(e.type==='checkbox')e.checked=!!S[k];else e.value=S[k]});Object.keys(fmt).concat(['sea','mtn','crat','cloud','atm']).forEach(out);
+QA('#chips button').forEach(b=>b.classList.toggle('on',+b.dataset.type===S.type));root.classList.toggle('gas',S.type===4);
+const l=LB[S.type];Q('#l1').textContent=l[0];Q('#l2').textContent=l[1];Q('#l3').textContent=l[2];Q('#lsea').textContent=l[3]||'Coverage';Q('#ltex').textContent=l[4]}
+const clim=T=>T<180?'Cryogenic':T<250?'Frozen':T<320?'Temperate':T<500?'Hot':T<800?'Scorching':'Infernal';
+function apply(){
+const t=S.type,gr=clamp(S.g,.3,3);U.uType.value=t;U.uC1.value.set(S.c1);U.uC2.value.set(S.c2);U.uC3.value.set(S.c3);U.uAtmC.value.set(S.atmC);U.uRingC.value.set(S.rc);U.uCloudC.value.set(CC[t]);
+U.uSea.value=S.sea;U.uScale.value=S.tex;U.uBands.value=12*S.tex;U.uMtn.value=S.mtn/Math.pow(gr,.6);U.uCrat.value=S.crat;U.uCloud.value=S.cloud;U.uTemp.value=S.temp;
+U.uSeed.value.set(S.seed[0],S.seed[1],S.seed[2]);
+atmos.scale.setScalar(1.03+.18*S.atm/Math.sqrt(gr));atmos.visible=S.atm>.02;
+clouds.visible=t!==4&&S.cloud>.02;
+base=.75+.4*Math.log2(1+S.R);grp.rotation.z=S.tilt*Math.PI/180;
+const k=S.rIn.toFixed(2)+'|'+S.rW.toFixed(2);U.uRingOn.value=S.ring?1:0;ring.visible=S.ring;ringR=S.rIn+S.rW;
+if(k!==ringKey){ringKey=k;U.uRIn.value=S.rIn;U.uROut.value=S.rIn+S.rW;const g=new THREE.RingGeometry(S.rIn,S.rIn+S.rW,128,1);g.rotateX(-Math.PI/2);ring.geometry.dispose();ring.geometry=g}
+moon.visible=S.moon;
+const T=S.temp,mass=S.g*S.R*S.R;
+Q('.info').innerHTML='<h3>'+S.name.replace(/</g,'&lt;')+'</h3><p>'+TN[t]+' · '+clim(T)+'</p><dl>'+
+'<dt>Radius</dt><dd>'+Math.round(S.R*6371).toLocaleString()+' km</dd><dt>Mass</dt><dd>'+mass.toFixed(2)+' M⊕</dd><dt>Gravity</dt><dd>'+(S.g*9.81).toFixed(1)+' m/s²</dd>'+
+'<dt>Temperature</dt><dd>'+Math.round(T-273.15)+' °C</dd><dt>Day</dt><dd>'+(S.rot<.02?'tidally locked':(24/S.rot).toFixed(1)+' h')+'</dd><dt>Year</dt><dd>'+(S.orb<.02?'—':Math.round(365/S.orb)+' d')+'</dd>'+
+'<dt>Axial tilt</dt><dd>'+S.tilt+'°</dd><dt>Atmosphere</dt><dd>'+(S.atm<.05?'none':S.atm<.35?'thin':S.atm<.7?'moderate':'dense')+'</dd>'+
+(t===4?'<dt>Rings</dt><dd>'+(S.ring?'yes':'no')+'</dd>':'<dt>'+(LB[t][3]||'Liquid').split(' ')[0]+'</dt><dd>'+Math.round(S.sea*100)+'%</dd><dt>Rings / moon</dt><dd>'+(S.ring?'yes':'no')+' / '+(S.moon?'yes':'no')+'</dd>')+'</dl>';
+}
+/* ---------- UI ---------- */
+Q('#chips').innerHTML=TN.map((n,i)=>'<button data-type="'+i+'"><i style="background:'+DOT[i]+'"></i>'+n+'</button>').join('');
+const A1=['Ae','Kry','Zen','Tha','Vor','Ly','Oru','Xan','Cae','Mir','Ny','Eri'],A2=['lor','th','dara','nox','mere','sia','ron','tek','vae','lis'],A3=['a','is','on','ia','us','ara',''];
+const pick=a=>a[Math.floor(Math.random()*a.length)],genName=()=>pick(A1)+pick(A2)+pick(A3)+(Math.random()<.5?' '+pick(['b','c','d','Prime','IV','VII']):'');
+function hs(hex,dh,ds){const c=CL(),o={};c.set(hex);c.getHSL(o);c.setHSL((o.h+dh+1)%1,clamp(o.s+ds,0,1),o.l);return '#'+c.getHexString()}
+function defCam(){const a=Math.max(1,1.1/camera.aspect);return Math.max(base*3.4,S.ring?ringR*base*1.95:0)*a}
+function refresh(sp){apply();syncUI();if(sp!==undefined)spawn=sp;tD=defCam()}
+function create(){load(S.type);S.seed=sd();S.name=genName();refresh(0);toast('Planet “'+S.name+'” created')}
+function random(){let t;do t=Math.floor(Math.random()*6);while(t===S.type);load(t);const p=P[t],dh=rnd(-.25,.25);
+S.c1=hs(p.c1,dh,rnd(-.1,.1));S.c2=hs(p.c2,dh,rnd(-.1,.1));S.c3=hs(p.c3,dh*1.3,0);S.atmC=hs(p.atmC,dh,0);S.rc=hs(p.rc,rnd(-.1,.1),0);
+if(t!==4){S.sea=clamp(p.sea+rnd(-.25,.3),0,1);S.mtn=rnd(.2,1);S.crat=t===1?rnd(0,.1):rnd(0,.9);S.cloud=rnd(0,.8);S.R=clamp(p.R*rnd(.6,1.6),.3,3)}else S.R=rnd(5,11.5);
+S.atm=rnd(.1,.9);S.tilt=Math.round(Math.random()<.12?rnd(60,98):rnd(0,40));S.rot=+rnd(.3,3).toFixed(2);S.orb=+rnd(.3,3).toFixed(2);S.g=+clamp(p.g*rnd(.7,1.3),.2,3.5).toFixed(2);S.temp=Math.round(p.temp*rnd(.8,1.25));
+S.tex=+rnd(.7,2).toFixed(2);S.ring=Math.random()<(t===4?.7:.22);S.rIn=+rnd(1.3,1.8).toFixed(2);S.rW=+rnd(.3,1).toFixed(2);S.moon=Math.random()<.65;S.seed=sd();S.name=genName();refresh(0);toast('Random world: '+S.name)}
+function resetAll(){load(1);S.name='Aurelia';S.seed=[7.3,21.1,3.9];S.moon=true;S.auto=false;az=.6;el=.25;refresh(.2)}
+root.addEventListener('input',e=>{const k=e.target.dataset&&e.target.dataset.k;if(!k)return;const t=e.target;S[k]=t.type==='checkbox'?t.checked:t.type==='range'?+t.value:t.value;out(k);apply();if(k==='ring'||k==='R'||k==='rIn'||k==='rW')tD=Math.max(tD,0)}); 
+root.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
+if(b.dataset.type!==undefined){load(+b.dataset.type);refresh(.5)}
+else if(b.dataset.tab!==undefined){QA('.tabs button').forEach(x=>x.classList.toggle('on',x===b));QA('.pane').forEach(p=>p.classList.toggle('on',p.dataset.pane===b.dataset.tab))}
+else if(b.dataset.m){obs=b.dataset.m==='obs';root.classList.toggle('obs',obs);QA('.seg button').forEach(x=>x.classList.toggle('on',x===b));if(obs)hideHint()}
+else switch(b.dataset.a){case'create':create();break;case'random':random();break;case'reset':resetAll();toast('Reset to default planet');break;
+case'seed':S.seed=sd();apply();break;case'cam':az=tAz=.6;tEl=.25;tD=defCam();toast('Camera reset');break;
+case'info':root.classList.toggle('noinfo');break;
+case'fs':{const el=document.fullscreenElement||document.webkitFullscreenElement;try{if(el)(document.exitFullscreen||document.webkitExitFullscreen).call(document);else{const r=root.requestFullscreen||root.webkitRequestFullscreen;if(!r)throw 0;const p=r.call(root);if(p&&p.catch)p.catch(()=>toast('Fullscreen isn’t available here'))}}catch(x){toast('Fullscreen isn’t supported on this device')}}}});
+if(mobile)root.classList.add('noinfo');
+const hint=Q('.hint');function hideHint(){hint.style.opacity=0}setTimeout(hideHint,7000);
+
+/* ---------- camera controls ---------- */
+let az=.6,el=.25,tAz=.6,tEl=.25,tD=7,dist=7,obs=false,vAz=0,vEl=0,drag=false,shiftX=0;
+const ptr=new Map();let pinch=0;
+const pd=()=>{const a=[...ptr.values()];return Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y)||1};
+cv.addEventListener('pointerdown',e=>{cv.setPointerCapture(e.pointerId);ptr.set(e.pointerId,{x:e.clientX,y:e.clientY});drag=true;vAz=vEl=0;if(ptr.size===2)pinch=pd();hideHint()});
+cv.addEventListener('pointermove',e=>{const p=ptr.get(e.pointerId);if(!p)return;const dx=e.clientX-p.x,dy=e.clientY-p.y;p.x=e.clientX;p.y=e.clientY;
+if(ptr.size===1){const s=.0055*(45/ (camera.fov||45));tAz-=dx*s;tEl+=dy*s;vAz=-dx*s;vEl=dy*s}else if(ptr.size===2){const n=pd();tD*=pinch/n;pinch=n}});
+const up=e=>{ptr.delete(e.pointerId);if(ptr.size<2)pinch=0;if(!ptr.size)drag=false};
+cv.addEventListener('pointerup',up);cv.addEventListener('pointercancel',up);
+cv.addEventListener('wheel',e=>{e.preventDefault();tD*=Math.exp(e.deltaY*.0012)},{passive:false});
+cv.addEventListener('dblclick',()=>{tD=defCam()});
+
+/* ---------- loop ---------- */
+let W=1,H=1;
+function resize(){W=root.clientWidth||innerWidth;H=root.clientHeight||innerHeight;renderer.setSize(W,H,false);camera.aspect=W/H;camera.updateProjectionMatrix()}
+resize();addEventListener('resize',resize);if(window.ResizeObserver)new ResizeObserver(resize).observe(root);
+let last=performance.now(),time=0,spin=0,moonA=0,acc=0,fc=0,errs=0;
+const tmp=V3(0,0,0);
+function loop(now){requestAnimationFrame(loop);
+try{const dt=Math.min((now-last)/1000,.05);last=now;time+=dt;U.uTime.value=time;
+spin+=dt*.25*S.rot;U.uSpin.value=spin;U.uSpinC.value=spin*1.07+time*.01;
+if(spawn<1)spawn=Math.min(1,spawn+dt*1.3);const e=1-Math.pow(1-spawn,3);
+grp.scale.setScalar(base*(.35+.65*e));U.uAtm.value=S.atm*e;
+/* camera */
+if(!drag){if(S.auto||obs)tAz+=dt*.13;tAz+=vAz*dt*60;tEl+=vEl*dt*60;const f=Math.pow(.9,dt*60);vAz*=f;vEl*=f}
+tEl=clamp(tEl,-1.4,1.4);tD=clamp(tD,base*1.4+.3,40);
+const k=1-Math.exp(-dt*12);az+=(tAz-az)*k;el+=(tEl-el)*k;dist+=(tD-dist)*k;
+camera.position.set(dist*Math.cos(el)*Math.sin(az),dist*Math.sin(el),dist*Math.cos(el)*Math.cos(az));camera.lookAt(0,0,0);
+const ts=(!obs&&W>820)?150:0;shiftX+=(ts-shiftX)*Math.min(1,dt*5);camera.setViewOffset(W,H,-shiftX,0,W,H);
+/* tilt-space uniforms */
+eul.set(0,0,grp.rotation.z);tiltQ.setFromEuler(eul).invert();
+U.uSun.value.copy(SUNW).applyQuaternion(tiltQ);U.uCam.value.copy(camera.position).applyQuaternion(tiltQ).divideScalar(grp.scale.x);
+/* moon */
+if(S.moon){moonA+=dt*.35*S.orb;const mr=base*Math.max(3.1,S.ring?ringR+1.3:0),ms=.15*base+.06;
+moon.position.set(Math.cos(moonA)*mr,Math.sin(moonA)*mr*.18,Math.sin(moonA)*mr);moon.scale.setScalar(ms);moon.rotation.y+=dt*.2}
+bg.rotation.y+=dt*.0015;gal.rotation.z+=dt*.01;bg.position.copy(camera.position);
+renderer.render(scene,camera);errs=0;
+/* adaptive quality */
+acc+=dt;fc++;if(fc>=90){if(acc/fc>.032&&pr>.8){pr=Math.max(.8,pr-.25);renderer.setPixelRatio(pr);stMat.uniforms.uPx.value=pr;resize()}acc=0;fc=0}
+}catch(err){if(++errs>3){fail('A rendering error occurred:<br>'+String(err.message||err)+'<br><br>Try reloading the page.');console.error(err)}}}
+resetAll();spawn=0;tD=dist=defCam()*1.15;requestAnimationFrame(loop);
+})();
+</script>
+</body></html>

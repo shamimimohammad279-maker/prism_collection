@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#080D18">
+<title>PRISM MIND</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;500;700&display=swap">
+<style>
+:root{--bg:#080D18;--sur:#111B2B;--glass:rgba(201,228,255,.08);--bd:rgba(255,255,255,.15);--pri:#8CCBFF;--sec:#A99BFF;--acc:#79E3D0;--tx:#F4F7FC;--tx2:#AAB7C8;--on:#080D18;--sh:0 10px 30px rgba(0,0,0,.35);color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#F1F5FA;--sur:#FFFFFF;--glass:rgba(255,255,255,.65);--bd:rgba(21,32,51,.12);--pri:#397FC2;--sec:#7467C8;--acc:#268F83;--tx:#152033;--tx2:#64748B;--on:#FFFFFF;--sh:0 10px 30px rgba(21,32,51,.1);color-scheme:light}}
+:root[data-theme="light"]{--bg:#F1F5FA;--sur:#FFFFFF;--glass:rgba(255,255,255,.65);--bd:rgba(21,32,51,.12);--pri:#397FC2;--sec:#7467C8;--acc:#268F83;--tx:#152033;--tx2:#64748B;--on:#FFFFFF;--sh:0 10px 30px rgba(21,32,51,.1);color-scheme:light}
+
+html{scroll-padding-top:env(safe-area-inset-top,0px);height:100%}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;min-height:100%;background:radial-gradient(500px 360px at 85% -5%,color-mix(in srgb,var(--sec) 30%,transparent),transparent),radial-gradient(520px 380px at 0% 30%,color-mix(in srgb,var(--pri) 22%,transparent),transparent),var(--bg);background-attachment:fixed;color:var(--tx);font-family:"Vazirmatn",Tahoma,sans-serif;padding:0 16px 96px}
+header{max-width:480px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;padding:16px 2px 8px}
+h1{margin:0;font-size:17px;font-weight:700;letter-spacing:.5px;direction:ltr;display:flex;align-items:center;gap:8px}
+main{max-width:480px;margin:0 auto}
+.tab{display:none}.tab.on{display:block;animation:in .25s ease}
+@keyframes in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.tab.on{animation:none}*{animation:none!important;transition:none!important}}
+.card{background:var(--glass);border:1px solid var(--bd);border-radius:24px;padding:18px;margin-bottom:12px;box-shadow:var(--sh);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+.card h2{margin:0 0 10px;font-size:13px;font-weight:500;color:var(--tx2)}
+.num{direction:ltr;font-variant-numeric:tabular-nums;text-align:center}
+.sub{color:var(--tx2);font-size:14px;line-height:1.9}
+button,input,select,textarea{font:inherit;color:var(--tx)}
+button{border:1px solid var(--bd);background:var(--glass);border-radius:16px;min-height:48px;padding:0 16px;cursor:pointer;font-weight:500}
+button:active{transform:scale(.97)}button:disabled{opacity:.45}
+.pri{background:var(--pri);color:var(--on);border-color:transparent;font-weight:700}
+.row{display:flex;gap:8px}.row>*{flex:1;min-width:0}.gap{margin-top:10px}
+input:not([type=range]):not([type=checkbox]):not([type=color]),select{width:100%;min-height:48px;border-radius:14px;border:1px solid var(--bd);background:var(--glass);padding:0 12px}
+select{background:var(--sur)}
+textarea{width:100%;border-radius:14px;border:1px solid var(--bd);background:var(--glass);padding:12px;line-height:1.9;resize:vertical}
+input[type=range]{width:100%;accent-color:var(--pri);min-height:30px}
+input[type=color]{width:100%;height:48px;border:1px solid var(--bd);border-radius:14px;background:var(--glass);padding:4px}
+:focus-visible{outline:3px solid var(--pri);outline-offset:2px}
+.lb{display:flex;justify-content:space-between;font-size:13px;color:var(--tx2);margin:10px 0 0}.lb b{color:var(--tx);font-weight:500;direction:ltr}
+.ck{display:flex;align-items:center;gap:8px;margin-top:10px;font-size:14px}.ck input{width:20px;height:20px;accent-color:var(--pri)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}.chip{min-height:38px;padding:0 12px;font-size:13px;border-radius:14px}.chip.on{background:var(--pri);color:var(--on);border-color:transparent;font-weight:700}
+.item{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 0;border-top:1px solid var(--bd)}.item:first-child{border-top:0}
+.item b{font-weight:500}.item small{display:block;color:var(--tx2)}
+.x{min-height:40px;width:40px;padding:0;flex:0 0 40px;color:var(--tx2)}
+.empty{color:var(--tx2);text-align:center;padding:14px 0;font-size:14px;line-height:1.9}
+.msg{min-height:22px;text-align:center;color:var(--acc);font-size:14px;margin:4px 0}.msg.err{color:#ff8f8f}
+nav{position:fixed;inset:auto 0 0 0;padding:0 14px calc(10px + env(safe-area-inset-bottom,0px))}
+nav div{max-width:480px;margin:0 auto;display:flex;gap:4px;background:var(--glass);border:1px solid var(--bd);border-radius:22px;padding:5px;-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);box-shadow:var(--sh)}
+nav button{flex:1;border:0;background:none;min-height:46px;padding:0 2px;font-size:12.5px;color:var(--tx2);border-radius:17px}
+nav button.on{background:var(--pri);color:var(--on);font-weight:700}
+.hid{display:none!important}
+.q{font-size:19px;line-height:2.1;margin:14px 0}.seq{display:inline-block;font-size:24px;letter-spacing:1px;margin-top:6px;color:var(--pri)}
+.opt{display:block;width:100%;text-align:right;margin-top:8px;min-height:52px;font-size:16px;transition:border-color .2s,background .2s}
+.opt.ok{border-color:var(--acc);background:color-mix(in srgb,var(--acc) 22%,transparent)}
+.opt.no{border-color:#ff8f8f;animation:sh .35s}@keyframes sh{25%{transform:translateX(6px)}75%{transform:translateX(-6px)}}
+.hints{background:var(--glass);border:1px solid var(--bd);border-radius:16px;padding:12px 14px;margin-top:10px;font-size:14px;line-height:2}.sol{border-color:var(--acc)}
+</style>
+</head>
+<body>
+<header><h1>PRISM MIND</h1><button class="x" id="theme" aria-label="تغییر تم روشن و تاریک">◐</button></header>
+<main>
+
+<div id="pw">
+ <div class="card" id="fl"><div class="row"><select id="fc" aria-label="دسته"><option value="all">همه‌ی دسته‌ها</option><option>منطق</option><option>الگو</option><option>احتمال</option><option>ناقص</option><option>چندمرحله</option></select><select id="fd" aria-label="سختی"><option value="all">همه‌ی سطح‌ها</option><option value="1">آسان</option><option value="2">متوسط</option><option value="3">سخت</option></select></div></div>
+ <div id="pc"></div>
+</div>
+<div id="pr" class="hid"></div>
+
+</main>
+<nav><div role="tablist"><button class="on" data-t="pz">معما</button><button data-t="dy">چالش روزانه</button><button data-t="pr">پیشرفت</button></div></nav>
+<script>
+var K='prism-mind-';
+
+var $=function(s){return document.querySelector(s)},$$=function(s){return document.querySelectorAll(s)};
+function ls(k,d){try{var v=localStorage.getItem(K+k);return v?JSON.parse(v):d}catch(e){return d}}
+function sv(k,v){try{localStorage.setItem(K+k,JSON.stringify(v))}catch(e){}}
+function p2(n){return(n<10?'0':'')+n}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+var t0=ls('theme',null);if(t0)document.documentElement.dataset.theme=t0;
+$('#theme').onclick=function(){var r=document.documentElement,c=r.dataset.theme||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');r.dataset.theme=c==='dark'?'light':'dark';sv('theme',r.dataset.theme)};
+var tabs=$$('nav button');
+function go(t){tabs.forEach(function(x){x.classList.toggle('on',x.dataset.t===t)});$$('.tab').forEach(function(e){e.classList.toggle('on',e.id===t)});if(window.onTab)onTab(t)}
+tabs.forEach(function(b){b.onclick=function(){go(b.dataset.t)}});
+
+
+var P=[
+{c:'الگو',d:1,q:'عدد بعدی دنباله را پیدا کن:<br><span dir="ltr" class="seq">2, 6, 12, 20, 30, ?</span>',o:['40','42','44','36'],a:1,h:['فاصله‌ی بین جمله‌های پشت‌سرهم را حساب کن.','فاصله‌ها 4، 6، 8 و 10 هستند. الگوی فاصله‌ها چیست؟'],s:'فاصله‌ها هر بار 2 واحد بیشتر می‌شوند: 4، 6، 8، 10 و بعدی 12. پس 30 + 12 = 42.'},
+{c:'الگو',d:1,q:'عدد بعدی چیست؟<br><span dir="ltr" class="seq">1, 1, 2, 3, 5, 8, ?</span>',o:['11','12','13','15'],a:2,h:['به رابطه‌ی هر جمله با دو جمله‌ی قبلش نگاه کن.'],s:'هر جمله جمع دو جمله‌ی قبلی است (دنباله‌ی فیبوناچی): 5 + 8 = 13.'},
+{c:'الگو',d:2,q:'عدد بعدی چیست؟<br><span dir="ltr" class="seq">3, 6, 11, 18, 27, ?</span>',o:['36','38','40','45'],a:1,h:['فاصله‌ی جمله‌ها را بنویس.','فاصله‌ها اعداد فرد پشت‌سرهم‌اند.'],s:'فاصله‌ها 3، 5، 7، 9 هستند و بعدی 11 است. پس 27 + 11 = 38.'},
+{c:'الگو',d:2,q:'عدد بعدی چیست؟<br><span dir="ltr" class="seq">2, 3, 5, 9, 17, ?</span>',o:['25','31','33','35'],a:2,h:['فاصله‌ی جمله‌ها را حساب کن.','فاصله‌ها هر بار دو برابر می‌شوند.'],s:'فاصله‌ها 1، 2، 4، 8 هستند و بعدی 16 است. پس 17 + 16 = 33.'},
+{c:'الگو',d:2,q:'عدد بعدی چیست؟<br><span dir="ltr" class="seq">1, 2, 6, 24, 120, ?</span>',o:['240','480','600','720'],a:3,h:['هر جمله را به جمله‌ی قبل تقسیم کن.'],s:'ضریب‌ها 2، 3، 4 و 5 هستند، پس ضریب بعدی 6 است: 120 × 6 = 720.'},
+{c:'منطق',d:1,q:'اگر همه‌ی A ها B باشند و همه‌ی B ها C باشند، کدام جمله حتماً درست است؟',o:['همه‌ی C ها A هستند','همه‌ی A ها C هستند','بعضی C ها B نیستند','هیچ A ای C نیست'],a:1,h:['یک نمودار با دایره‌های تو در تو بکش.'],s:'A داخل B است و B داخل C، پس A داخل C است. جمله‌ی دیگر لزوماً درست نیست.'},
+{c:'منطق',d:1,q:'سارا از مریم بلندتر است. مریم از نیما بلندتر است. آرش از سارا بلندتر است. کدام نفر کوتاه‌ترین است؟',o:['سارا','مریم','آرش','نیما'],a:3,h:['افراد را از بلند به کوتاه مرتب کن.'],s:'ترتیب از بلند به کوتاه: آرش، سارا، مریم، نیما. پس نیما کوتاه‌ترین است.'},
+{c:'منطق',d:2,q:'هر آدم یا همیشه راست می‌گوید یا همیشه دروغ. الف می‌گوید: «دست‌کم یکی از ما دروغ‌گوست.» ب می‌گوید: «الف دروغ می‌گوید.» وضعیت آن‌ها چیست؟',o:['هر دو راست‌گو','الف راست‌گو و ب دروغ‌گو','الف دروغ‌گو و ب راست‌گو','هر دو دروغ‌گو'],a:1,h:['فرض کن الف دروغ‌گوست و ببین به تناقض می‌رسی یا نه.','اگر جمله‌ی الف دروغ باشد، یعنی هیچ‌کدام دروغ‌گو نیستند.'],s:'اگر الف دروغ‌گو باشد، جمله‌اش باید نادرست باشد، یعنی هیچ‌کس دروغ‌گو نیست، که با دروغ‌گو بودن الف تناقض دارد. پس الف راست‌گوست و جمله‌اش درست است: ب دروغ‌گوست. این با گفته‌ی ب هم می‌خواند، چون ب دروغ می‌گوید.'},
+{c:'منطق',d:2,q:'امروز سه‌شنبه است. 100 روز بعد چه روزی است؟',o:['چهارشنبه','پنج‌شنبه','جمعه','شنبه'],a:1,h:['هفته 7 روز دارد. باقی‌مانده‌ی 100 بر 7 را حساب کن.'],s:'100 = 14 × 7 + 2، پس 2 روز بعد از سه‌شنبه می‌شود پنج‌شنبه.'},
+{c:'احتمال',d:2,q:'دو تاس سالم می‌اندازیم. احتمال اینکه مجموع آن‌ها 7 شود چقدر است؟',o:['1/12','1/6','1/9','7/36'],a:1,h:['همه‌ی حالت‌ها 36 تاست. حالت‌های مطلوب را بشمار.'],s:'حالت‌های مجموع 7: (1,6)، (2,5)، (3,4)، (4,3)، (5,2)، (6,1)، یعنی 6 حالت از 36. احتمال 6/36 = 1/6.'},
+{c:'احتمال',d:2,q:'یک سکه‌ی سالم را سه بار می‌اندازیم. احتمال اینکه دقیقاً دو بار شیر بیاید چقدر است؟',o:['1/4','1/8','1/2','3/8'],a:3,h:['همه‌ی حالت‌ها 8 تاست. حالت‌های دقیقاً دو شیر را فهرست کن.'],s:'حالت‌های مطلوب: ش‌ش‌خ، ش‌خ‌ش، خ‌ش‌ش یعنی 3 حالت از 8. احتمال 3/8.'},
+{c:'احتمال',d:1,q:'به چند طریق می‌شود سه نفر را در یک صف قرار داد؟',o:['3','6','9','12'],a:1,h:['برای جای اول چند انتخاب داری؟ بعد برای جای دوم؟'],s:'3 × 2 × 1 = 6 حالت.'},
+{c:'احتمال',d:1,q:'از 5 نفر چند کمیته‌ی دو نفره می‌توان ساخت؟',o:['5','10','20','25'],a:1,h:['اگر ترتیب مهم نبود، هر زوج را فقط یک بار بشمار.'],s:'تعداد انتخاب‌های ترتیب‌دار 5 × 4 = 20 است و هر زوج دو بار شمرده شده. پس 20 ÷ 2 = 10.'},
+{c:'ناقص',d:3,q:'سه جعبه با برچسب‌های «سیب»، «پرتقال» و «مخلوط» داری و می‌دانی همه‌ی برچسب‌ها غلط‌اند. از جعبه‌ی «مخلوط» یک میوه بیرون می‌آوری و سیب است. جعبه‌ی «پرتقال» چه چیزی دارد؟',o:['سیب','پرتقال','مخلوط','معلوم نمی‌شود'],a:2,h:['جعبه‌ی «مخلوط» برچسب غلط دارد، پس واقعاً چه محتوایی دارد؟','حالا برای جعبه‌ی «پرتقال» فقط دو محتوا باقی می‌ماند.'],s:'برچسب «مخلوط» غلط است و سیب بیرون آمده، پس آن جعبه فقط سیب دارد. جعبه‌ی «پرتقال» نه پرتقال دارد (برچسبش غلط است) و نه سیب (سیب در جعبه‌ی دیگر است)، پس مخلوط دارد.'},
+{c:'چندمرحله',d:1,q:'عددی را در 3 ضرب می‌کنم، 4 تا کم می‌کنم و بر 2 تقسیم می‌کنم. حاصل 10 می‌شود. عدد اولیه چند بود؟',o:['6','8','9','10'],a:1,h:['از آخر به اول برگرد و هر عمل را معکوس کن.'],s:'از آخر: 10 × 2 = 20، 20 + 4 = 24، 24 ÷ 3 = 8. بررسی: 8 × 3 = 24، 24 − 4 = 20، 20 ÷ 2 = 10.'},
+{c:'چندمرحله',d:2,q:'پدری 30 سال از پسرش بزرگ‌تر است. 5 سال پیش سن پدر 4 برابر سن پسر بود. پسر الان چند ساله است؟',o:['10','12','15','20'],a:2,h:['سن پسر را x بگیر و سن پدر الان و 5 سال پیش را بر حسب x بنویس.','معادله: x + 25 = 4(x − 5).'],s:'x + 25 = 4x − 20، پس 3x = 45 و x = 15. پدر 45 ساله است. 5 سال پیش 40 و 10 بودند و 40 = 4 × 10.'},
+{c:'چندمرحله',d:2,q:'در کلاسی 30 نفره، 18 نفر فوتبال و 15 نفر والیبال بازی می‌کنند و 5 نفر هیچ‌کدام. چند نفر هر دو ورزش را بازی می‌کنند؟',o:['3','6','8','10'],a:2,h:['اول بشمار چند نفر دست‌کم یک ورزش بازی می‌کنند.'],s:'30 − 5 = 25 نفر دست‌کم یکی را بازی می‌کنند. چون 18 + 15 = 33، تعداد 33 − 25 = 8 نفر دو بار شمرده شده‌اند، پس 8 نفر هر دو را بازی می‌کنند.'}
+];
+P.forEach(function(p,i){p.id=i});
+var st=ls('st',{done:{},hist:[],mark:{}}),mode='pz',cur=-1,hint=0,tried=false,shown=false,right=-1,wrong={};
+function save(){sv('st',st)}
+function flt(){var c=$('#fc').value,d=$('#fd').value;return P.filter(function(p){return(c==='all'||p.c===c)&&(d==='all'||p.d===+d)})}
+function pick(){var L=flt();if(!L.length){cur=-1;draw();return}var U=L.filter(function(p){return !st.done[p.id]&&p.id!==cur}),A=U.length?U:L.filter(function(p){return p.id!==cur});if(!A.length)A=L;
+ cur=A[Math.floor(Math.random()*A.length)].id;reset()}
+function daily(){var d=new Date();cur=Math.floor(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())/864e5)%P.length;reset()}
+function reset(){hint=0;tried=false;shown=false;right=-1;wrong={};draw()}
+function dots(n){return '●'.repeat(n)+'○'.repeat(3-n)}
+function draw(){
+ if(cur<0){$('#pc').innerHTML='<div class="card"><div class="empty">معمایی با این فیلتر پیدا نشد. دسته یا سطح را عوض کن.</div></div>';return}
+ var p=P[cur],h='<div class="card"><div class="sub" style="display:flex;justify-content:space-between"><span>'+(mode==='dy'?'چالش امروز · ':'')+p.c+'</span><span>'+dots(p.d)+(st.done[p.id]?' · حل‌شده':'')+'</span></div><div class="q">'+p.q+'</div><div id="ops">';
+ p.o.forEach(function(o,i){h+='<button class="opt'+(right===i?' ok':'')+(wrong[i]?' no':'')+'" data-i="'+i+'"'+(right>=0||shown?' disabled':'')+'>'+o+'</button>'});
+ h+='</div><div class="msg'+(right<0&&tried?' err':'')+'" role="status">'+(right>=0?'درسته! آفرین.':(tried&&!shown?'این نبود. دوباره فکر کن یا راهنما بگیر.':''))+'</div>';
+ if(hint){h+='<div class="hints">'+p.h.slice(0,hint).map(function(t,i){return '<div>راهنما '+(i+1)+': '+t+'</div>'}).join('')+'</div>'}
+ if(right>=0||shown){h+='<div class="hints sol"><b>پاسخ: '+p.o[p.a]+'</b><div>'+p.s+'</div></div>'}
+ h+='<div class="row gap"><button id="hb"'+(hint>=p.h.length||right>=0||shown?' disabled':'')+'>راهنما'+(hint<p.h.length?' ('+(p.h.length-hint)+')':'')+'</button><button id="sb"'+(!tried||right>=0||shown?' disabled':'')+'>نمایش پاسخ</button></div>';
+ h+='<div class="row gap"><button id="mb">'+(st.mark[p.id]?'برداشتن علامت':'علامت برای بعد')+'</button>'+(mode==='pz'?'<button class="pri" id="nb">معمای بعدی</button>':'')+'</div></div>';
+ $('#pc').innerHTML=h;
+ $$('.opt').forEach(function(b){b.onclick=function(){var i=+b.dataset.i;tried=true;var ok=i===p.a;st.hist.push({id:p.id,ok:ok,at:Date.now()});if(st.hist.length>300)st.hist.shift();
+  if(ok){right=i;st.done[p.id]=true}else wrong[i]=true;save();draw()}});
+ $('#hb').onclick=function(){hint++;draw()};$('#sb').onclick=function(){shown=true;draw()};
+ $('#mb').onclick=function(){if(st.mark[p.id])delete st.mark[p.id];else st.mark[p.id]=1;save();draw()};
+ if($('#nb'))$('#nb').onclick=pick}
+function prog(){var n=Object.keys(st.done).length,at=st.hist.length,ok=st.hist.filter(function(x){return x.ok}).length,h='<div class="card"><h2>آمار شخصی</h2><div class="sub">حل‌شده: <b style="color:var(--tx)">'+n+'</b> از '+P.length+' معما<br>تلاش‌ها: '+at+(at?' | درستی: '+Math.round(ok/at*100)+'٪':'')+'</div><div class="chips gap">';
+ ['منطق','الگو','احتمال','ناقص','چندمرحله'].forEach(function(c){var t=P.filter(function(p){return p.c===c}),d=t.filter(function(p){return st.done[p.id]}).length;h+='<span class="chip" style="display:inline-flex;align-items:center;border:1px solid var(--bd)">'+c+': '+d+'/'+t.length+'</span>'});
+ h+='</div></div>';
+ var M=P.filter(function(p){return st.mark[p.id]});h+='<div class="card"><h2>علامت‌گذاری‌شده برای بعد</h2>'+(M.length?M.map(function(p){return '<div class="item"><span style="font-size:14px">'+p.c+' · '+dots(p.d)+'</span><button data-g="'+p.id+'">باز کردن</button></div>'}).join(''):'<div class="empty">معمایی را علامت نزده‌ای.</div>')+'</div>';
+ var H=st.hist.slice(-10).reverse();h+='<div class="card"><h2>تاریخچه‌ی تلاش‌ها</h2>'+(H.length?H.map(function(x){return '<div class="item"><span style="font-size:14px">'+P[x.id].c+' · '+dots(P[x.id].d)+'</span><span style="color:'+(x.ok?'var(--acc)':'var(--tx2)')+'">'+(x.ok?'درست':'نادرست')+' · '+new Date(x.at).toLocaleDateString('fa-IR',{day:'numeric',month:'short'})+'</span></div>'}).join(''):'<div class="empty">هنوز تلاشی ثبت نشده. اولین معما را حل کن.</div>')+'</div>';
+ h+='<button id="clr" style="width:100%">پاک‌کردن همه‌ی پیشرفت</button>';
+ $('#pr').innerHTML=h;
+ $('#pr').onclick=function(e){var g=e.target.closest('[data-g]');if(g){mode='pz';cur=+g.dataset.g;$('#fc').value='all';$('#fd').value='all';reset();go('pz')}};
+ $('#clr').onclick=function(){if(confirm('همه‌ی پیشرفت و تاریخچه پاک شود؟')){st={done:{},hist:[],mark:{}};save();prog()}}}
+function onTab(t){mode=t;$('#pw').classList.toggle('hid',t==='pr');$('#pr').classList.toggle('hid',t!=='pr');$('#fl').classList.toggle('hid',t!=='pz');
+ if(t==='pr')prog();else if(t==='dy')daily();else{if(cur<0||(mode==='pz'&&flt().indexOf(P[cur])<0))pick();else draw()}}
+$('#fc').onchange=$('#fd').onchange=pick;
+pick();
+
+</script>
+</body>
+</html>

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#080D18">
+<title>PRISM PHYSICS</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;500;700&display=swap">
+<style>
+:root{--bg:#080D18;--sur:#111B2B;--glass:rgba(201,228,255,.08);--bd:rgba(255,255,255,.15);--pri:#8CCBFF;--sec:#A99BFF;--acc:#79E3D0;--tx:#F4F7FC;--tx2:#AAB7C8;--on:#080D18;--sh:0 10px 30px rgba(0,0,0,.35);color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#F1F5FA;--sur:#FFFFFF;--glass:rgba(255,255,255,.65);--bd:rgba(21,32,51,.12);--pri:#397FC2;--sec:#7467C8;--acc:#268F83;--tx:#152033;--tx2:#64748B;--on:#FFFFFF;--sh:0 10px 30px rgba(21,32,51,.1);color-scheme:light}}
+:root[data-theme="light"]{--bg:#F1F5FA;--sur:#FFFFFF;--glass:rgba(255,255,255,.65);--bd:rgba(21,32,51,.12);--pri:#397FC2;--sec:#7467C8;--acc:#268F83;--tx:#152033;--tx2:#64748B;--on:#FFFFFF;--sh:0 10px 30px rgba(21,32,51,.1);color-scheme:light}
+
+html{scroll-padding-top:env(safe-area-inset-top,0px);height:100%}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;min-height:100%;background:radial-gradient(500px 360px at 85% -5%,color-mix(in srgb,var(--sec) 30%,transparent),transparent),radial-gradient(520px 380px at 0% 30%,color-mix(in srgb,var(--pri) 22%,transparent),transparent),var(--bg);background-attachment:fixed;color:var(--tx);font-family:"Vazirmatn",Tahoma,sans-serif;padding:0 16px 96px}
+header{max-width:480px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;padding:16px 2px 8px}
+h1{margin:0;font-size:17px;font-weight:700;letter-spacing:.5px;direction:ltr;display:flex;align-items:center;gap:8px}
+main{max-width:480px;margin:0 auto}
+.tab{display:none}.tab.on{display:block;animation:in .25s ease}
+@keyframes in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.tab.on{animation:none}*{animation:none!important;transition:none!important}}
+.card{background:var(--glass);border:1px solid var(--bd);border-radius:24px;padding:18px;margin-bottom:12px;box-shadow:var(--sh);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+.card h2{margin:0 0 10px;font-size:13px;font-weight:500;color:var(--tx2)}
+.num{direction:ltr;font-variant-numeric:tabular-nums;text-align:center}
+.sub{color:var(--tx2);font-size:14px;line-height:1.9}
+button,input,select,textarea{font:inherit;color:var(--tx)}
+button{border:1px solid var(--bd);background:var(--glass);border-radius:16px;min-height:48px;padding:0 16px;cursor:pointer;font-weight:500}
+button:active{transform:scale(.97)}button:disabled{opacity:.45}
+.pri{background:var(--pri);color:var(--on);border-color:transparent;font-weight:700}
+.row{display:flex;gap:8px}.row>*{flex:1;min-width:0}.gap{margin-top:10px}
+input:not([type=range]):not([type=checkbox]):not([type=color]),select{width:100%;min-height:48px;border-radius:14px;border:1px solid var(--bd);background:var(--glass);padding:0 12px}
+select{background:var(--sur)}
+textarea{width:100%;border-radius:14px;border:1px solid var(--bd);background:var(--glass);padding:12px;line-height:1.9;resize:vertical}
+input[type=range]{width:100%;accent-color:var(--pri);min-height:30px}
+input[type=color]{width:100%;height:48px;border:1px solid var(--bd);border-radius:14px;background:var(--glass);padding:4px}
+:focus-visible{outline:3px solid var(--pri);outline-offset:2px}
+.lb{display:flex;justify-content:space-between;font-size:13px;color:var(--tx2);margin:10px 0 0}.lb b{color:var(--tx);font-weight:500;direction:ltr}
+.ck{display:flex;align-items:center;gap:8px;margin-top:10px;font-size:14px}.ck input{width:20px;height:20px;accent-color:var(--pri)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}.chip{min-height:38px;padding:0 12px;font-size:13px;border-radius:14px}.chip.on{background:var(--pri);color:var(--on);border-color:transparent;font-weight:700}
+.item{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 0;border-top:1px solid var(--bd)}.item:first-child{border-top:0}
+.item b{font-weight:500}.item small{display:block;color:var(--tx2)}
+.x{min-height:40px;width:40px;padding:0;flex:0 0 40px;color:var(--tx2)}
+.empty{color:var(--tx2);text-align:center;padding:14px 0;font-size:14px;line-height:1.9}
+.msg{min-height:22px;text-align:center;color:var(--acc);font-size:14px;margin:4px 0}.msg.err{color:#ff8f8f}
+nav{position:fixed;inset:auto 0 0 0;padding:0 14px calc(10px + env(safe-area-inset-bottom,0px))}
+nav div{max-width:480px;margin:0 auto;display:flex;gap:4px;background:var(--glass);border:1px solid var(--bd);border-radius:22px;padding:5px;-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);box-shadow:var(--sh)}
+nav button{flex:1;border:0;background:none;min-height:46px;padding:0 2px;font-size:12.5px;color:var(--tx2);border-radius:17px}
+nav button.on{background:var(--pri);color:var(--on);font-weight:700}
+.hid{display:none!important}
+
+</style>
+</head>
+<body>
+<header><h1>PRISM PHYSICS</h1><button class="x" id="theme" aria-label="تغییر تم روشن و تاریک">◐</button></header>
+<main>
+
+<div class="card"><canvas id="cv" width="720" height="520" style="width:100%;display:block;border-radius:16px;background:var(--sur)" aria-label="صحنه‌ی شبیه‌سازی"></canvas>
+<canvas id="gr" class="hid" width="720" height="240" style="width:100%;display:block;border-radius:16px;background:var(--sur);margin-top:10px" aria-label="نمودار ارتفاع و سرعت بر حسب زمان"></canvas></div>
+<div class="card" id="ro" role="status" style="font-size:14px;line-height:2"></div>
+<div class="card" id="ctl"></div>
+<div class="card"><h2>چه چیزی را مشاهده می‌کنی؟</h2><div id="obs" style="font-size:14px;line-height:1.9"></div><div id="ass" class="sub" style="font-size:13px;margin-top:8px"></div></div>
+
+</main>
+<nav><div role="tablist"><button class="on" data-t="m">حرکت</button><button data-t="f">سقوط آزاد</button><button data-t="c">برخورد</button></div></nav>
+<script>
+var K='prism-physics-';
+
+var $=function(s){return document.querySelector(s)},$$=function(s){return document.querySelectorAll(s)};
+function ls(k,d){try{var v=localStorage.getItem(K+k);return v?JSON.parse(v):d}catch(e){return d}}
+function sv(k,v){try{localStorage.setItem(K+k,JSON.stringify(v))}catch(e){}}
+function p2(n){return(n<10?'0':'')+n}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+var t0=ls('theme',null);if(t0)document.documentElement.dataset.theme=t0;
+$('#theme').onclick=function(){var r=document.documentElement,c=r.dataset.theme||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');r.dataset.theme=c==='dark'?'light':'dark';sv('theme',r.dataset.theme)};
+var tabs=$$('nav button');
+function go(t){tabs.forEach(function(x){x.classList.toggle('on',x.dataset.t===t)});$$('.tab').forEach(function(e){e.classList.toggle('on',e.id===t)});if(window.onTab)onTab(t)}
+tabs.forEach(function(b){b.onclick=function(){go(b.dataset.t)}});
+
+
+var cv=$('#cv'),cx=cv.getContext('2d'),gr=$('#gr'),gx=gr.getContext('2d');
+var CFG={
+ m:{p:[['v0','سرعت اولیه','m/s',0,30,.5,18],['ang','زاویه‌ی پرتاب','°',0,90,1,45],['ax','شتاب افقی','m/s²',-5,5,.1,0],['ay','شتاب عمودی','m/s²',-15,5,.1,-9.8]],
+  obs:'با تغییر شتاب، مسیر از خط راست به منحنی (سهمی) تبدیل می‌شود. طول بردار سرعت در طول حرکت تغییر می‌کند، ولی بردار شتاب ثابت می‌ماند.',
+  ass:'فرض‌ها: شتاب ثابت، بدون مقاومت هوا، جسم نقطه‌ای. نقطه‌ی شروع: (3 m، 3 m). حرکت وقتی تمام می‌شود که جسم به زمین برسد یا از صحنه خارج شود.'},
+ f:{p:[['g','شتاب گرانش','m/s²',1,25,.01,9.81],['h','ارتفاع اولیه','m',1,100,1,50]],pre:[['زمین',9.81],['ماه',1.62],['مریخ',3.71],['مشتری',24.79]],
+  obs:'ارتفاع با مجذور زمان کم می‌شود، ولی سرعت به‌صورت خطی زیاد می‌شود. جرم جسم در نتیجه نقشی ندارد.',
+  ass:'فرض‌ها: بدون مقاومت هوا، گرانش ثابت، شروع از حالت سکون. مقدارهای ماه، مریخ و مشتری تقریبی‌اند.'},
+ c:{p:[['m1','جرم جسم ۱','kg',1,10,.5,3],['v1','سرعت جسم ۱','m/s',-10,10,.5,4],['m2','جرم جسم ۲','kg',1,10,.5,2],['v2','سرعت جسم ۲','m/s',-10,10,.5,-2],['e','ضریب بازگشت (۱ = کشسان، ۰ = کاملاً ناکشسان)','',0,1,.1,1]],
+  obs:'تکانه‌ی کل (جمع جرم × سرعت) پیش و پس از برخورد برابر می‌ماند. در برخورد کشسان انرژی جنبشی هم حفظ می‌شود. در برخورد ناکشسان بخشی از آن از بین می‌رود و در حالت کاملاً ناکشسان دو جسم با سرعت یکسان حرکت می‌کنند.',
+  ass:'فرض‌ها: حرکت روی یک خط، بدون اصطکاک، سیستم ایزوله. اندازه‌ی هر جسم فقط برای نمایش است. اگر دو جسم از هم دور شوند برخوردی رخ نمی‌دهد.'}};
+var mode='m',V={},S={t:0,play:true,speed:1,trail:[],end:'',col:false,vec:true,trl:true,x1:0,x2:0,u1:0,u2:0,p0:0,k0:0};
+Object.keys(CFG).forEach(function(m){V[m]={};CFG[m].p.forEach(function(p){V[m][p[0]]=p[6]})});
+function R(n){return Math.round(n*100)/100}
+function css(n){return getComputedStyle(document.documentElement).getPropertyValue(n).trim()}
+function ctl(){
+ var c=CFG[mode],h='';
+ if(c.pre)h+='<div class="chips" style="margin-bottom:6px">'+c.pre.map(function(p,i){return '<button class="chip" data-pre="'+i+'">'+p[0]+'</button>'}).join('')+'</div>';
+ c.p.forEach(function(p){h+='<label class="lb" for="s_'+p[0]+'"><span>'+p[1]+'</span><b id="o_'+p[0]+'">'+R(V[mode][p[0]])+' '+p[2]+'</b></label><input type="range" id="s_'+p[0]+'" min="'+p[3]+'" max="'+p[4]+'" step="'+p[5]+'" value="'+V[mode][p[0]]+'">'});
+ h+='<label class="lb" for="s_sp"><span>سرعت پخش</span><b id="o_sp">'+S.speed+'×</b></label><input type="range" id="s_sp" min=".25" max="2" step=".25" value="'+S.speed+'">';
+ h+='<label class="ck"><input type="checkbox" id="ckv"'+(S.vec?' checked':'')+'> نمایش بردارها</label><label class="ck"><input type="checkbox" id="ckt"'+(S.trl?' checked':'')+'> نمایش مسیر</label>';
+ h+='<div class="row gap"><button class="pri" id="pp">توقف</button><button id="rs">اجرای مجدد</button></div>';
+ $('#ctl').innerHTML=h;
+ c.p.forEach(function(p){$('#s_'+p[0]).oninput=function(e){V[mode][p[0]]=+e.target.value;$('#o_'+p[0]).textContent=R(+e.target.value)+' '+p[2];reset()}});
+ $$('[data-pre]').forEach(function(b){b.onclick=function(){V.f.g=c.pre[+b.dataset.pre][1];ctl();reset()}});
+ $('#s_sp').oninput=function(e){S.speed=+e.target.value;$('#o_sp').textContent=S.speed+'×'};
+ $('#ckv').onchange=function(e){S.vec=e.target.checked};$('#ckt').onchange=function(e){S.trl=e.target.checked};
+ $('#pp').onclick=function(){if(S.end){reset();return}S.play=!S.play;$('#pp').textContent=S.play?'توقف':'ادامه'};
+ $('#rs').onclick=reset;
+ $('#obs').textContent=c.obs;$('#ass').textContent=c.ass;
+}
+function reset(){S.t=0;S.trail=[];S.end='';S.col=false;S.play=true;
+ if(mode==='c'){var v=V.c;S.x1=8;S.x2=32;S.u1=v.v1;S.u2=v.v2;S.p0=v.m1*v.v1+v.m2*v.v2;S.k0=.5*v.m1*v.v1*v.v1+.5*v.m2*v.v2*v.v2}
+ var pp=$('#pp');if(pp)pp.textContent='توقف'}
+function mpos(){var v=V.m,r=v.ang*Math.PI/180,vx=v.v0*Math.cos(r),vy=v.v0*Math.sin(r),t=S.t;
+ return{x:3+vx*t+.5*v.ax*t*t,y:3+vy*t+.5*v.ay*t*t,vx:vx+v.ax*t,vy:vy+v.ay*t}}
+function step(dt){
+ if(!S.play||S.end)return;dt*=S.speed;S.t+=dt;
+ if(mode==='m'){var q=mpos();if(q.y<=0){S.end='جسم به زمین رسید'}else if(q.x<0||q.x>60||q.y>43.3){S.end='جسم از صحنه خارج شد'}else if(S.t>30){S.end='پایان ۳۰ ثانیه'}}
+ else if(mode==='f'){var T=Math.sqrt(2*V.f.h/V.f.g);if(S.t>=T){S.t=T;S.end='جسم به زمین رسید'}}
+ else{var v=V.c,r1=.8+.12*v.m1,r2=.8+.12*v.m2;S.x1+=S.u1*dt;S.x2+=S.u2*dt;
+  if(!S.col&&S.x2-S.x1<=r1+r2&&S.u1>S.u2){var e=v.e,a=S.u1,b=S.u2;S.u1=((v.m1-e*v.m2)*a+(1+e)*v.m2*b)/(v.m1+v.m2);S.u2=((v.m2-e*v.m1)*b+(1+e)*v.m1*a)/(v.m1+v.m2);S.col=true;var ov=r1+r2-(S.x2-S.x1);S.x1-=ov/2;S.x2+=ov/2}
+  if(S.x1<-6||S.x2>46||S.t>25)S.end=S.col?'اجسام از صحنه خارج شدند':'برخوردی رخ نداد'}
+}
+function arr(c,x,y,dx,dy,col){var L=Math.hypot(dx,dy);if(L<4)return;c.strokeStyle=col;c.fillStyle=col;c.lineWidth=3;c.beginPath();c.moveTo(x,y);c.lineTo(x+dx,y+dy);c.stroke();var a=Math.atan2(dy,dx);c.beginPath();c.moveTo(x+dx,y+dy);c.lineTo(x+dx-11*Math.cos(a-.4),y+dy-11*Math.sin(a-.4));c.lineTo(x+dx-11*Math.cos(a+.4),y+dy-11*Math.sin(a+.4));c.closePath();c.fill()}
+function ball(x,y,r,col){var g=cx.createRadialGradient(x,y,0,x,y,r*3);g.addColorStop(0,col);g.addColorStop(1,'transparent');cx.globalAlpha=.35;cx.fillStyle=g;cx.beginPath();cx.arc(x,y,r*3,0,7);cx.fill();cx.globalAlpha=1;cx.fillStyle=col;cx.beginPath();cx.arc(x,y,r,0,7);cx.fill()}
+function grid(){cx.clearRect(0,0,720,520);cx.strokeStyle=css('--bd');cx.lineWidth=1;cx.globalAlpha=.6;for(var i=0;i<=720;i+=60){cx.beginPath();cx.moveTo(i,0);cx.lineTo(i,520);cx.stroke()}for(var j=520;j>=0;j-=60){cx.beginPath();cx.moveTo(0,j);cx.lineTo(720,j);cx.stroke()}cx.globalAlpha=1}
+function label(t,x,y,col){cx.fillStyle=col||css('--tx2');cx.font='20px Vazirmatn,Tahoma,sans-serif';cx.fillText(t,x,y)}
+function draw(){
+ var pri=css('--pri'),acc=css('--acc'),sec=css('--sec'),tx=css('--tx2'),ro='';grid();
+ if(mode==='m'){var q=mpos(),y=Math.max(0,q.y),X=q.x*12,Y=520-y*12;
+  if(!S.end&&S.trl)S.trail.push([X,Y]);
+  if(S.trl){cx.strokeStyle=pri;cx.globalAlpha=.5;cx.lineWidth=3;cx.setLineDash([2,8]);cx.beginPath();S.trail.forEach(function(p,i){i?cx.lineTo(p[0],p[1]):cx.moveTo(p[0],p[1])});cx.stroke();cx.setLineDash([]);cx.globalAlpha=1}
+  ball(X,Y,11,pri);
+  if(S.vec){arr(cx,X,Y,q.vx*4,-q.vy*4,acc);arr(cx,X,Y,V.m.ax*8,-V.m.ay*8,sec)}
+  label('— سرعت',590,30,acc);label('— شتاب',590,56,sec);
+  ro='t = '+R(S.t)+' s &nbsp;|&nbsp; x = '+R(q.x)+' m &nbsp;|&nbsp; y = '+R(y)+' m<br>v = '+R(Math.hypot(q.vx,q.vy))+' m/s &nbsp;|&nbsp; a = '+R(Math.hypot(V.m.ax,V.m.ay))+' m/s²'}
+ else if(mode==='f'){var g=V.f.g,h0=V.f.h,T=Math.sqrt(2*h0/g),t=Math.min(S.t,T),hh=h0-.5*g*t*t,vv=g*t,top=40,bot=470,yy=bot-(hh/h0)*(bot-top);
+  cx.strokeStyle=tx;cx.lineWidth=3;cx.beginPath();cx.moveTo(0,bot+12);cx.lineTo(720,bot+12);cx.stroke();label('0 m',10,bot+8);label(R(h0)+' m',10,top);
+  if(S.trl){cx.fillStyle=pri;cx.globalAlpha=.4;for(var i=0;i<=10;i++){var tt=t*i/10,yv=bot-((h0-.5*g*tt*tt)/h0)*(bot-top);cx.beginPath();cx.arc(360,yv,4,0,7);cx.fill()}cx.globalAlpha=1}
+  ball(360,yy,14,pri);if(S.vec)arr(cx,360,yy,0,Math.min(120,vv*3),acc);
+  ro='t = '+R(t)+' s &nbsp;|&nbsp; h = '+R(hh)+' m &nbsp;|&nbsp; v = '+R(vv)+' m/s<br>زمان کل سقوط: '+R(T)+' s &nbsp;|&nbsp; سرعت برخورد: '+R(g*T)+' m/s';
+  gx.clearRect(0,0,720,240);gx.strokeStyle=css('--bd');gx.lineWidth=2;gx.strokeRect(40,10,660,200);
+  [['h',pri,function(x){return h0-.5*g*x*x},h0],['v',acc,function(x){return g*x},g*T]].forEach(function(c){
+   gx.strokeStyle=c[1];gx.lineWidth=2;gx.globalAlpha=.3;gx.beginPath();for(var i=0;i<=100;i++){var x=T*i/100,Y=210-(c[2](x)/c[3])*200;i?gx.lineTo(40+660*i/100,Y):gx.moveTo(40+660*i/100,Y)}gx.stroke();
+   gx.globalAlpha=1;gx.lineWidth=4;gx.beginPath();for(var j=0;j<=100;j++){var x2=t*j/100;var Y2=210-(c[2](x2)/c[3])*200;j?gx.lineTo(40+660*(x2/T),Y2):gx.moveTo(40,Y2)}gx.stroke()});
+  gx.fillStyle=pri;gx.font='18px Vazirmatn,Tahoma,sans-serif';gx.fillText('h (m)',50,30);gx.fillStyle=acc;gx.fillText('v (m/s)',120,30);gx.fillStyle=tx;gx.fillText('t (s) ←',640,232)}
+ else{var v=V.c,r1=.8+.12*v.m1,r2=.8+.12*v.m2,k=18,Y=300;
+  cx.strokeStyle=tx;cx.lineWidth=3;cx.beginPath();cx.moveTo(0,Y+r1*k+4);cx.lineTo(720,Y+r1*k+4);cx.stroke();
+  [[S.x1,r1,pri,S.u1,'۱'],[S.x2,r2,sec,S.u2,'۲']].forEach(function(b){var X=b[0]*k,r=b[1]*k;cx.fillStyle=b[2];cx.globalAlpha=.85;cx.beginPath();cx.roundRect?cx.roundRect(X-r,Y-r,2*r,2*r,10):cx.rect(X-r,Y-r,2*r,2*r);cx.fill();cx.globalAlpha=1;cx.fillStyle=css('--on');cx.font='22px Vazirmatn,Tahoma,sans-serif';cx.fillText(b[4],X-6,Y+7);if(S.vec)arr(cx,X,Y-r-16,b[3]*12,0,css('--acc'))});
+  var p1=v.m1*S.u1+v.m2*S.u2,k1=.5*v.m1*S.u1*S.u1+.5*v.m2*S.u2*S.u2;
+  ro='پیش از برخورد: تکانه = '+R(S.p0)+' kg·m/s &nbsp;|&nbsp; انرژی جنبشی = '+R(S.k0)+' J<br>'+(S.col?'پس از برخورد: تکانه = '+R(p1)+' kg·m/s &nbsp;|&nbsp; انرژی جنبشی = '+R(k1)+' J':'هنوز برخوردی رخ نداده است.')}
+ if(S.end)ro+='<br><b style="color:var(--acc)">'+S.end+'. برای دیدن دوباره، «اجرای مجدد» را بزن.</b>';
+ $('#ro').innerHTML=ro}
+function onTab(t){mode=t;$('#gr').classList.toggle('hid',t!=='f');ctl();reset()}
+var last=0;function loop(ts){var dt=Math.min(.05,(ts-last)/1000||0);last=ts;step(dt);draw();requestAnimationFrame(loop)}
+onTab('m');requestAnimationFrame(loop);
+
+</script>
+</body>
+</html>

@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#080D18">
+<title>PRISM TIME</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;500;700&display=swap">
+<style>
+:root{--bg:#080D18;--sur:#111B2B;--glass:rgba(201,228,255,.08);--bd:rgba(255,255,255,.15);--pri:#8CCBFF;--sec:#A99BFF;--acc:#79E3D0;--tx:#F4F7FC;--tx2:#AAB7C8;--on:#080D18;--sh:0 10px 30px rgba(0,0,0,.35);color-scheme:dark;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#F1F5FA;--sur:#FFFFFF;--glass:rgba(255,255,255,.65);--bd:rgba(21,32,51,.12);--pri:#397FC2;--sec:#7467C8;--acc:#268F83;--tx:#152033;--tx2:#64748B;--on:#FFFFFF;--sh:0 10px 30px rgba(21,32,51,.1);color-scheme:light}}
+:root[data-theme="light"]{--bg:#F1F5FA;--sur:#FFFFFF;--glass:rgba(255,255,255,.65);--bd:rgba(21,32,51,.12);--pri:#397FC2;--sec:#7467C8;--acc:#268F83;--tx:#152033;--tx2:#64748B;--on:#FFFFFF;--sh:0 10px 30px rgba(21,32,51,.1);color-scheme:light}
+html{scroll-padding-top:env(safe-area-inset-top,0px);height:100%}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;min-height:100%;background:radial-gradient(500px 360px at 85% -5%,color-mix(in srgb,var(--sec) 30%,transparent),transparent),radial-gradient(520px 380px at 0% 30%,color-mix(in srgb,var(--pri) 22%,transparent),transparent),var(--bg);background-attachment:fixed;color:var(--tx);font-family:"Vazirmatn",Tahoma,sans-serif;padding:0 16px 96px}
+header{max-width:480px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;padding:16px 2px 8px}
+h1{margin:0;font-size:17px;font-weight:700;letter-spacing:.5px;direction:ltr}
+main{max-width:480px;margin:0 auto}
+.tab{display:none}.tab.on{display:block;animation:in .25s ease}
+@keyframes in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.tab.on{animation:none}}
+.card{background:var(--glass);border:1px solid var(--bd);border-radius:24px;padding:18px;margin-bottom:12px;box-shadow:var(--sh);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+.card h2{margin:0 0 10px;font-size:13px;font-weight:500;color:var(--tx2)}
+.num{direction:ltr;font-variant-numeric:tabular-nums;text-align:center}
+.big{font-size:60px;font-weight:300;letter-spacing:1px;line-height:1.1}
+.mid{font-size:44px;font-weight:300}
+.sub{color:var(--tx2);text-align:center;font-size:14px}
+button,input,select{font:inherit;color:var(--tx)}
+button{border:1px solid var(--bd);background:var(--glass);border-radius:16px;min-height:48px;padding:0 16px;cursor:pointer;font-weight:500}
+button:active{transform:scale(.97)}
+.pri{background:var(--pri);color:var(--on);border-color:transparent;font-weight:700}
+.row{display:flex;gap:8px}.row>*{flex:1;min-width:0}
+input{width:100%;min-height:48px;border-radius:14px;border:1px solid var(--bd);background:var(--glass);padding:0 12px}
+input.n{text-align:center;direction:ltr;font-size:22px}
+:focus-visible{outline:3px solid var(--pri);outline-offset:2px}
+.ring{position:relative;width:min(70vw,240px);margin:6px auto 14px}
+.ring svg{display:block;width:100%}
+.ring .num{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:36px;font-weight:300}
+.item{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 0;border-top:1px solid var(--bd)}
+.item:first-child{border-top:0}
+.item b{font-weight:500}.item small{display:block;color:var(--tx2)}
+.x{min-height:40px;width:40px;padding:0;flex:0 0 40px;color:var(--tx2)}
+.empty{color:var(--tx2);text-align:center;padding:14px 0;font-size:14px}
+.msg{min-height:22px;text-align:center;color:var(--acc);font-size:14px;margin-bottom:6px}
+.msg.err{color:#ff8f8f}
+nav{position:fixed;inset:auto 0 0 0;padding:0 14px calc(10px + env(safe-area-inset-bottom,0px))}
+nav div{max-width:480px;margin:0 auto;display:flex;gap:4px;background:var(--glass);border:1px solid var(--bd);border-radius:22px;padding:5px;-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);box-shadow:var(--sh)}
+nav button{flex:1;border:0;background:none;min-height:46px;padding:0 2px;font-size:12.5px;color:var(--tx2);border-radius:17px}
+nav button.on{background:var(--pri);color:var(--on);font-weight:700}
+.hid{display:none}
+</style>
+</head>
+<body>
+<header><h1>PRISM TIME</h1><button class="x" id="theme" aria-label="تغییر تم روشن و تاریک">◐</button></header>
+<main>
+
+<section class="tab on" id="clock">
+  <div class="card">
+    <div class="num big" id="dig">00:00:00</div>
+    <svg id="ana" class="hid" viewBox="0 0 200 200" style="width:min(70vw,240px);display:block;margin:0 auto" aria-hidden="true">
+      <circle cx="100" cy="100" r="96" fill="none" stroke="var(--bd)" stroke-width="2"/>
+      <line id="hh" x1="100" y1="100" x2="100" y2="58" stroke="var(--tx)" stroke-width="5" stroke-linecap="round"/>
+      <line id="mh" x1="100" y1="100" x2="100" y2="36" stroke="var(--pri)" stroke-width="3.5" stroke-linecap="round"/>
+      <line id="sh" x1="100" y1="112" x2="100" y2="28" stroke="var(--acc)" stroke-width="1.8" stroke-linecap="round"/>
+      <circle cx="100" cy="100" r="4" fill="var(--tx)"/>
+    </svg>
+    <div class="sub" id="date" style="margin-top:10px"></div>
+  </div>
+  <div class="row"><button id="mode">نمایش عقربه‌ای</button></div>
+</section>
+
+<section class="tab" id="timer">
+  <div class="card">
+    <div class="msg" id="tmsg" role="status"></div>
+    <div class="ring">
+      <svg viewBox="0 0 220 220" aria-hidden="true">
+        <circle cx="110" cy="110" r="96" fill="none" stroke="var(--bd)" stroke-width="8"/>
+        <circle id="ringp" cx="110" cy="110" r="96" fill="none" stroke="var(--pri)" stroke-width="8" stroke-linecap="round" stroke-dasharray="603.2" stroke-dashoffset="0" transform="rotate(-90 110 110)" style="transition:stroke-dashoffset .3s linear"/>
+      </svg>
+      <div class="num" id="tdisp">00:05:00</div>
+    </div>
+    <input id="ttitle" placeholder="عنوان تایمر (اختیاری)" aria-label="عنوان تایمر" style="margin-bottom:10px">
+    <div class="row num" dir="ltr" style="margin-bottom:10px">
+      <input class="n" id="th" type="number" min="0" max="99" value="0" aria-label="ساعت" inputmode="numeric">
+      <input class="n" id="tmn" type="number" min="0" max="59" value="5" aria-label="دقیقه" inputmode="numeric">
+      <input class="n" id="ts" type="number" min="0" max="59" value="0" aria-label="ثانیه" inputmode="numeric">
+    </div>
+    <div class="row"><button class="pri" id="tgo">شروع</button><button id="trs">بازنشانی</button></div>
+  </div>
+</section>
+
+<section class="tab" id="sw">
+  <div class="card">
+    <div class="num mid" id="sdisp">00:00.00</div>
+    <div class="row" style="margin-top:14px"><button class="pri" id="sgo">شروع</button><button id="slap" disabled>ثبت دور</button><button id="sclr">پاک‌کردن</button></div>
+  </div>
+  <div class="card"><h2>دورها</h2><div id="laps"></div></div>
+</section>
+
+<section class="tab" id="world">
+  <div class="card"><h2>افزودن شهر</h2>
+    <div class="row"><input id="cin" list="cl" placeholder="مثلاً لندن" aria-label="جست‌وجوی شهر"><button id="cadd" style="flex:0 0 auto">افزودن</button></div>
+    <datalist id="cl"></datalist><div class="msg err" id="cmsg" role="status" style="margin:8px 0 0"></div>
+  </div>
+  <div class="card" id="wl"></div>
+</section>
+
+<section class="tab" id="cd">
+  <div class="card"><h2>رویداد جدید</h2>
+    <input id="etitle" placeholder="عنوان رویداد" aria-label="عنوان رویداد" style="margin-bottom:8px">
+    <input id="edate" type="datetime-local" aria-label="تاریخ و ساعت" style="margin-bottom:8px;direction:ltr">
+    <div class="msg err" id="emsg" role="status"></div>
+    <div class="row"><button class="pri" id="eadd">ذخیره رویداد</button></div>
+  </div>
+  <div class="card" id="el"></div>
+</section>
+
+</main>
+<nav><div role="tablist">
+  <button class="on" data-t="clock">ساعت</button><button data-t="timer">تایمر</button><button data-t="sw">کرونومتر</button><button data-t="world">جهانی</button><button data-t="cd">رویداد</button>
+</div></nav>
+
+<script>
+var $=function(s){return document.querySelector(s)};
+function ls(k,d){try{var v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}}
+function sv(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+function p2(n){return (n<10?'0':'')+n}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function beep(){try{if(navigator.vibrate)navigator.vibrate([300,150,300,150,300])}catch(e){}
+ try{var a=new (window.AudioContext||window.webkitAudioContext)(),o=a.createOscillator(),g=a.createGain();o.connect(g);g.connect(a.destination);o.frequency.value=880;g.gain.value=.2;o.start();o.stop(a.currentTime+.7)}catch(e){}}
+
+/* theme + tabs */
+var t0=ls('theme',null);if(t0)document.documentElement.dataset.theme=t0;
+$('#theme').onclick=function(){var r=document.documentElement,c=r.dataset.theme||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');r.dataset.theme=c==='dark'?'light':'dark';sv('theme',r.dataset.theme)};
+var tabs=document.querySelectorAll('nav button');
+tabs.forEach(function(b){b.onclick=function(){tabs.forEach(function(x){x.classList.toggle('on',x===b)});document.querySelectorAll('.tab').forEach(function(t){t.classList.toggle('on',t.id===b.dataset.t)});tick()}});
+
+/* clock */
+var mode=ls('clockmode','digital');
+function rot(id,a){$(id).setAttribute('transform','rotate('+a+' 100 100)')}
+function showMode(){$('#dig').classList.toggle('hid',mode!=='digital');$('#ana').classList.toggle('hid',mode==='digital');$('#mode').textContent=mode==='digital'?'نمایش عقربه‌ای':'نمایش دیجیتال'}
+$('#mode').onclick=function(){mode=mode==='digital'?'analog':'digital';sv('clockmode',mode);showMode()};
+function tickClock(){var d=new Date(),s=d.getSeconds(),m=d.getMinutes()+s/60,h=d.getHours()%12+m/60;
+ $('#dig').textContent=p2(d.getHours())+':'+p2(d.getMinutes())+':'+p2(s);
+ $('#date').textContent=d.toLocaleDateString('fa-IR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+ rot('#hh',h*30);rot('#mh',m*6);rot('#sh',s*6)}
+showMode();
+
+/* timer */
+var T={tot:300,left:300,end:0,iv:null};
+function tIn(){return (+$('#th').value||0)*3600+(+$('#tmn').value||0)*60+(+$('#ts').value||0)}
+function drawT(){var s=Math.max(0,Math.ceil(T.left));$('#tdisp').textContent=p2(Math.floor(s/3600))+':'+p2(Math.floor(s%3600/60))+':'+p2(s%60);
+ $('#ringp').style.strokeDashoffset=603.2*(1-(T.tot?Math.max(0,T.left)/T.tot:1))}
+function tMsg(t,err){var e=$('#tmsg');e.textContent=t;e.className='msg'+(err?' err':'')}
+function tStop(){clearInterval(T.iv);T.iv=null;$('#tgo').textContent='شروع'}
+function tTick(){T.left=(T.end-Date.now())/1000;if(T.left<=0){T.left=0;tStop();drawT();beep();var n=$('#ttitle').value.trim();tMsg(n?'«'+n+'» تمام شد':'تایمر تمام شد');$('#tgo').textContent='دوباره'}else drawT()}
+['#th','#tmn','#ts'].forEach(function(id){$(id).oninput=function(){if(!T.iv){T.tot=T.left=tIn();tMsg('');drawT()}}});
+$('#tgo').onclick=function(){
+ if(T.iv){T.left=(T.end-Date.now())/1000;tStop();$('#tgo').textContent='ادامه';return}
+ if(T.left<=0)T.tot=T.left=tIn();
+ if(T.left<=0){tMsg('زمان را بزرگ‌تر از صفر وارد کن',1);return}
+ tMsg('');T.end=Date.now()+T.left*1000;T.iv=setInterval(tTick,250);$('#tgo').textContent='توقف'};
+$('#trs').onclick=function(){tStop();T.tot=T.left=tIn();tMsg('');drawT()};
+drawT();
+
+/* stopwatch */
+var S={run:false,base:0,acc:0,iv:null,laps:[],last:0};
+function sNow(){return S.acc+(S.run?performance.now()-S.base:0)}
+function fS(ms){return p2(Math.floor(ms/60000))+':'+p2(Math.floor(ms/1000)%60)+'.'+p2(Math.floor(ms/10)%100)}
+function drawS(){$('#sdisp').textContent=fS(sNow())}
+function drawLaps(){var h='';S.laps.forEach(function(l,i){h='<div class="item num" dir="ltr"><b>'+(i+1)+'</b><span>'+fS(l.d)+'</span><small>'+fS(l.t)+'</small></div>'+h});
+ $('#laps').innerHTML=h||'<div class="empty">هنوز دوری ثبت نشده. کرونومتر را شروع کن و «ثبت دور» را بزن.</div>'}
+$('#sgo').onclick=function(){
+ if(S.run){S.acc=sNow();S.run=false;clearInterval(S.iv);$('#sgo').textContent='ادامه';$('#slap').disabled=true}
+ else{S.base=performance.now();S.run=true;S.iv=setInterval(drawS,40);$('#sgo').textContent='توقف';$('#slap').disabled=false}};
+$('#slap').onclick=function(){var t=sNow();S.laps.push({t:t,d:t-S.last});S.last=t;drawLaps()};
+$('#sclr').onclick=function(){S.run=false;clearInterval(S.iv);S.acc=0;S.last=0;S.laps=[];$('#sgo').textContent='شروع';$('#slap').disabled=true;drawS();drawLaps()};
+drawS();drawLaps();
+
+/* world clock */
+var C={'تهران':'Asia/Tehran','دبی':'Asia/Dubai','استانبول':'Europe/Istanbul','مسکو':'Europe/Moscow','لندن':'Europe/London','پاریس':'Europe/Paris','برلین':'Europe/Berlin','نیویورک':'America/New_York','لس‌آنجلس':'America/Los_Angeles','تورنتو':'America/Toronto','توکیو':'Asia/Tokyo','دهلی':'Asia/Kolkata','سیدنی':'Australia/Sydney'};
+$('#cl').innerHTML=Object.keys(C).map(function(k){return '<option value="'+k+'">'}).join('');
+var cities=ls('cities',['لندن','توکیو','نیویورک']);
+function offs(tz,d){var o={};new Intl.DateTimeFormat('en-US',{timeZone:tz,hourCycle:'h23',year:'numeric',month:'numeric',day:'numeric',hour:'numeric',minute:'numeric',second:'numeric'}).formatToParts(d).forEach(function(x){o[x.type]=+x.value});
+ return (Date.UTC(o.year,o.month-1,o.day,o.hour,o.minute,o.second)-Math.floor(d.getTime()/1000)*1000)/60000}
+function diffTxt(tz,d){var df=Math.round(offs(tz,d)+d.getTimezoneOffset());if(!df)return 'هم‌زمان با تو';var a=Math.abs(df),h=Math.floor(a/60),m=a%60;return h+(m?':'+p2(m):'')+' ساعت '+(df>0?'جلوتر':'عقب‌تر')}
+function drawW(){$('#wl').innerHTML=cities.length?cities.map(function(c,i){return '<div class="item"><div><b>'+esc(c)+'</b><small class="wd" data-tz="'+C[c]+'"></small></div><span class="num mid wt" data-tz="'+C[c]+'" style="font-size:28px"></span><button class="x" data-i="'+i+'" aria-label="حذف '+esc(c)+'">✕</button></div>'}).join(''):'<div class="empty">شهری اضافه نشده. اسم یک شهر را بنویس.</div>';tickW()}
+function tickW(){var d=new Date();document.querySelectorAll('.wt').forEach(function(e){e.textContent=d.toLocaleTimeString('en-GB',{timeZone:e.dataset.tz,hour:'2-digit',minute:'2-digit'})});
+ document.querySelectorAll('.wd').forEach(function(e){e.textContent=diffTxt(e.dataset.tz,d)})}
+$('#wl').onclick=function(e){var b=e.target.closest('[data-i]');if(b){cities.splice(+b.dataset.i,1);sv('cities',cities);drawW()}};
+$('#cadd').onclick=function(){var v=$('#cin').value.trim(),m=$('#cmsg');
+ if(!C[v]){m.textContent='این شهر در فهرست نیست. از پیشنهادها انتخاب کن.';return}
+ if(cities.indexOf(v)>-1){m.textContent='این شهر قبلاً اضافه شده.';return}
+ m.textContent='';cities.push(v);sv('cities',cities);$('#cin').value='';drawW()};
+drawW();
+
+/* countdown */
+var evs=ls('events',[]);
+function cdTxt(at){var ms=at-Date.now();if(ms<=0)return 'تمام شد';var m=Math.floor(ms/60000),d=Math.floor(m/1440),h=Math.floor(m%1440/60);return d+' روز، '+h+' ساعت، '+(m%60)+' دقیقه'}
+function drawE(){evs.sort(function(a,b){return a.at-b.at});
+ $('#el').innerHTML=evs.length?evs.map(function(v,i){return '<div class="item"><div><b>'+esc(v.t)+'</b><small>'+new Date(v.at).toLocaleDateString('fa-IR',{day:'numeric',month:'long',year:'numeric'})+'</small></div><span class="cdt" data-at="'+v.at+'" style="color:var(--acc);font-size:14px"></span><button class="x" data-i="'+i+'" aria-label="حذف '+esc(v.t)+'">✕</button></div>'}).join(''):'<div class="empty">رویدادی ثبت نشده. عنوان و تاریخ بزن تا شمارش معکوس شروع شود.</div>';tickE()}
+function tickE(){document.querySelectorAll('.cdt').forEach(function(e){e.textContent=cdTxt(+e.dataset.at)})}
+$('#el').onclick=function(e){var b=e.target.closest('[data-i]');if(b&&confirm('این رویداد حذف شود؟')){evs.splice(+b.dataset.i,1);sv('events',evs);drawE()}};
+$('#eadd').onclick=function(){var t=$('#etitle').value.trim(),v=$('#edate').value,m=$('#emsg');
+ if(!t){m.textContent='یک عنوان بنویس.';return}
+ if(!v){m.textContent='تاریخ و ساعت را انتخاب کن.';return}
+ var at=new Date(v).getTime();if(at<=Date.now()){m.textContent='تاریخ باید در آینده باشد.';return}
+ m.textContent='';evs.push({t:t,at:at});sv('events',evs);$('#etitle').value='';$('#edate').value='';drawE()};
+drawE();
+
+function tick(){tickClock();tickW();tickE()}
+tick();setInterval(tick,1000);
+</script>
+</body>
+</html>

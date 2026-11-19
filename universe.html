@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#080D18">
+<title>PRISM UNIVERSE</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;500;700&display=swap">
+<style>
+:root{--bg:#080D18;--sur:#111B2B;--glass:rgba(201,228,255,.08);--bd:rgba(255,255,255,.15);--pri:#8CCBFF;--sec:#A99BFF;--acc:#79E3D0;--tx:#F4F7FC;--tx2:#AAB7C8;--on:#080D18;--sh:0 10px 30px rgba(0,0,0,.35);color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#F1F5FA;--sur:#FFFFFF;--glass:rgba(255,255,255,.65);--bd:rgba(21,32,51,.12);--pri:#397FC2;--sec:#7467C8;--acc:#268F83;--tx:#152033;--tx2:#64748B;--on:#FFFFFF;--sh:0 10px 30px rgba(21,32,51,.1);color-scheme:light}}
+:root[data-theme="light"]{--bg:#F1F5FA;--sur:#FFFFFF;--glass:rgba(255,255,255,.65);--bd:rgba(21,32,51,.12);--pri:#397FC2;--sec:#7467C8;--acc:#268F83;--tx:#152033;--tx2:#64748B;--on:#FFFFFF;--sh:0 10px 30px rgba(21,32,51,.1);color-scheme:light}
+:root:root:root{--pri:var(--sec)}
+html{scroll-padding-top:env(safe-area-inset-top,0px);height:100%}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;min-height:100%;background:radial-gradient(500px 360px at 85% -5%,color-mix(in srgb,var(--sec) 30%,transparent),transparent),radial-gradient(520px 380px at 0% 30%,color-mix(in srgb,var(--pri) 22%,transparent),transparent),var(--bg);background-attachment:fixed;color:var(--tx);font-family:"Vazirmatn",Tahoma,sans-serif;padding:0 16px 96px}
+header{max-width:480px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;padding:16px 2px 8px}
+h1{margin:0;font-size:17px;font-weight:700;letter-spacing:.5px;direction:ltr;display:flex;align-items:center;gap:8px}
+main{max-width:480px;margin:0 auto}
+.tab{display:none}.tab.on{display:block;animation:in .25s ease}
+@keyframes in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.tab.on{animation:none}*{animation:none!important;transition:none!important}}
+.card{background:var(--glass);border:1px solid var(--bd);border-radius:24px;padding:18px;margin-bottom:12px;box-shadow:var(--sh);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+.card h2{margin:0 0 10px;font-size:13px;font-weight:500;color:var(--tx2)}
+.num{direction:ltr;font-variant-numeric:tabular-nums;text-align:center}
+.sub{color:var(--tx2);font-size:14px;line-height:1.9}
+button,input,select,textarea{font:inherit;color:var(--tx)}
+button{border:1px solid var(--bd);background:var(--glass);border-radius:16px;min-height:48px;padding:0 16px;cursor:pointer;font-weight:500}
+button:active{transform:scale(.97)}button:disabled{opacity:.45}
+.pri{background:var(--pri);color:var(--on);border-color:transparent;font-weight:700}
+.row{display:flex;gap:8px}.row>*{flex:1;min-width:0}.gap{margin-top:10px}
+input:not([type=range]):not([type=checkbox]):not([type=color]),select{width:100%;min-height:48px;border-radius:14px;border:1px solid var(--bd);background:var(--glass);padding:0 12px}
+select{background:var(--sur)}
+textarea{width:100%;border-radius:14px;border:1px solid var(--bd);background:var(--glass);padding:12px;line-height:1.9;resize:vertical}
+input[type=range]{width:100%;accent-color:var(--pri);min-height:30px}
+input[type=color]{width:100%;height:48px;border:1px solid var(--bd);border-radius:14px;background:var(--glass);padding:4px}
+:focus-visible{outline:3px solid var(--pri);outline-offset:2px}
+.lb{display:flex;justify-content:space-between;font-size:13px;color:var(--tx2);margin:10px 0 0}.lb b{color:var(--tx);font-weight:500;direction:ltr}
+.ck{display:flex;align-items:center;gap:8px;margin-top:10px;font-size:14px}.ck input{width:20px;height:20px;accent-color:var(--pri)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}.chip{min-height:38px;padding:0 12px;font-size:13px;border-radius:14px}.chip.on{background:var(--pri);color:var(--on);border-color:transparent;font-weight:700}
+.item{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 0;border-top:1px solid var(--bd)}.item:first-child{border-top:0}
+.item b{font-weight:500}.item small{display:block;color:var(--tx2)}
+.x{min-height:40px;width:40px;padding:0;flex:0 0 40px;color:var(--tx2)}
+.empty{color:var(--tx2);text-align:center;padding:14px 0;font-size:14px;line-height:1.9}
+.msg{min-height:22px;text-align:center;color:var(--acc);font-size:14px;margin:4px 0}.msg.err{color:#ff8f8f}
+nav{position:fixed;inset:auto 0 0 0;padding:0 14px calc(10px + env(safe-area-inset-bottom,0px))}
+nav div{max-width:480px;margin:0 auto;display:flex;gap:4px;background:var(--glass);border:1px solid var(--bd);border-radius:22px;padding:5px;-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);box-shadow:var(--sh)}
+nav button{flex:1;border:0;background:none;min-height:46px;padding:0 2px;font-size:12.5px;color:var(--tx2);border-radius:17px}
+nav button.on{background:var(--pri);color:var(--on);font-weight:700}
+.hid{display:none!important}
+.orb{width:18px;height:18px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff,var(--sec) 45%,#2a1f66);box-shadow:0 0 14px var(--sec)}
+</style>
+</head>
+<body>
+<header><h1><span class="orb"></span>PRISM UNIVERSE</h1><button class="x" id="theme" aria-label="تغییر تم روشن و تاریک">◐</button></header>
+<main>
+
+<section class="tab on" id="sys">
+  <div class="card" style="padding:10px"><canvas id="cv" width="720" height="560" style="width:100%;display:block;border-radius:18px;background:#05070f;touch-action:none" aria-label="منظومه‌ی ساخته‌شده؛ برای انتخاب سیاره آن را لمس کن"></canvas>
+   <div class="row gap"><button id="zi" aria-label="بزرگ‌نمایی">+</button><button id="zo" aria-label="کوچک‌نمایی">−</button><button id="ov" style="flex:2">نمای کلی</button><button id="pl">مدار: ثابت</button></div></div>
+  <div class="card" id="info"></div>
+  <div class="card"><h2>تولید جهان</h2>
+   <label class="lb" for="seed"><span>بذر (Seed): با بذر یکسان همیشه همین جهان ساخته می‌شود</span></label>
+   <div class="row gap"><input id="seed" aria-label="بذر جهان" style="direction:ltr"><button class="pri" id="gen" style="flex:0 0 auto">جهان جدید</button></div>
+   <label class="lb" for="np"><span>تعداد سیاره‌ها</span><b id="npo">5</b></label><input type="range" id="np" min="2" max="9" step="1" value="5">
+   <div class="row gap"><input id="uname" placeholder="نام این جهان برای ذخیره" aria-label="نام جهان"><button id="save" style="flex:0 0 auto">ذخیره</button></div><div class="msg" id="smsg" role="status"></div>
+  </div>
+</section>
+<section class="tab" id="bld">
+  <div class="card" style="padding:10px"><canvas id="bv" width="720" height="460" style="width:100%;display:block;border-radius:18px;background:#05070f;touch-action:none" aria-label="پیش‌نمایش سیاره؛ برای چرخاندن بکش"></canvas><div class="sub" style="text-align:center;margin-top:6px;font-size:13px">برای چرخاندن سیاره روی آن بکش</div></div>
+  <div class="card"><h2>نوع سیاره</h2><div class="chips" id="bt"></div>
+   <label class="lb"><span>رنگ غالب</span></label><input type="color" id="bc">
+   <label class="lb" for="bs"><span>اندازه (نسبت به زمین)</span><b id="bso">1</b></label><input type="range" id="bs" min=".3" max="12" step=".1" value="1">
+   <label class="ck"><input type="checkbox" id="br"> حلقه</label><label class="ck"><input type="checkbox" id="bm"> قمر</label></div>
+</section>
+<section class="tab" id="sav"><div class="card" id="sl"></div></section>
+
+</main>
+<nav><div role="tablist"><button class="on" data-t="sys">منظومه</button><button data-t="bld">ساخت سیاره</button><button data-t="sav">ذخیره‌ها</button></div></nav>
+<script>
+var K='prism-universe-';
+
+var $=function(s){return document.querySelector(s)},$$=function(s){return document.querySelectorAll(s)};
+function ls(k,d){try{var v=localStorage.getItem(K+k);return v?JSON.parse(v):d}catch(e){return d}}
+function sv(k,v){try{localStorage.setItem(K+k,JSON.stringify(v))}catch(e){}}
+function p2(n){return(n<10?'0':'')+n}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+var t0=ls('theme',null);if(t0)document.documentElement.dataset.theme=t0;
+$('#theme').onclick=function(){var r=document.documentElement,c=r.dataset.theme||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');r.dataset.theme=c==='dark'?'light':'dark';sv('theme',r.dataset.theme)};
+var tabs=$$('nav button');
+function go(t){tabs.forEach(function(x){x.classList.toggle('on',x.dataset.t===t)});$$('.tab').forEach(function(e){e.classList.toggle('on',e.id===t)});if(window.onTab)onTab(t)}
+tabs.forEach(function(b){b.onclick=function(){go(b.dataset.t)}});
+
+
+var W=720,H=560,cv=$('#cv'),cx=cv.getContext('2d');
+function hash(s){var h=2166136261;for(var i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return h>>>0}
+function rng(a){return function(){a|=0;a=a+0x6D2B79F5|0;var t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function shade(hex,f){var n=parseInt(hex.slice(1),16),r=n>>16,g=n>>8&255,b=n&255,t=f<0?0:255,p=Math.abs(f);return 'rgb('+Math.round((t-r)*p+r)+','+Math.round((t-g)*p+g)+','+Math.round((t-b)*p+b)+')'}
+var TY=[{n:'سنگی',c:['#b07a5a','#8f7a6f','#c2a27e'],r:[.4,1.6]},{n:'گازی',c:['#e0b070','#9fb4e0','#d49a9a'],r:[4,12]},{n:'یخی',c:['#a8d8f0','#c9e4ff','#8fd0d0'],r:[.6,3]},{n:'گدازه‌ای',c:['#e0623a','#c9482d','#f0873f'],r:[.5,1.5]},{n:'اقیانوسی',c:['#3a8fd0','#2f7fbf','#3fa7a0'],r:[.8,2.2]}];
+var SY=['کا','ری','نو','ورا','تا','می','لن','سا','دور','ایل','بار','ژی','ون','هر','زا','اس','فی','مور'];
+function nm(r){var n=2+Math.floor(r()*2),s='';for(var i=0;i<n;i++)s+=SY[Math.floor(r()*SY.length)];return s}
+var U={seed:'',n:5,ov:{}},sys=null,sel=-1,view={z:1,x:0,y:0},play=false,T=0,saves=ls('saves',[]);
+function gen(){var r=rng(hash(U.seed+'|'+U.n)),st={name:nm(r),color:['#ffd98a','#ffb36b','#cfe3ff'][Math.floor(r()*3)],ps:[],stars:[]};
+ var s2=rng(hash(U.seed+'s'));for(var i=0;i<110;i++)st.stars.push([s2()*W,s2()*H,s2()*1.4+.3,s2()*.6+.3]);
+ for(var i=0;i<U.n;i++){var ty=TY[Math.floor(r()*5)],rel=ty.r[0]+r()*(ty.r[1]-ty.r[0]);
+  st.ps.push({name:nm(r),ty:ty.n,color:ty.c[Math.floor(r()*3)],rel:rel,orbit:70+i*(36+r()*10),a0:r()*6.28,sp:.55+r()*.5,ring:ty.n==='گازی'?r()<.5:r()<.1,moons:Math.floor(r()*(ty.n==='گازی'?4:3))})}
+ sys=st}
+function eff(i){var p=sys.ps[i],o=U.ov[i]||{};return{name:p.name,ty:p.ty,color:o.color||p.color,rel:o.rel||p.rel,orbit:o.orbit||p.orbit,a0:p.a0,sp:p.sp,ring:p.ring,moons:p.moons}}
+function px(rel){return Math.max(4,Math.min(26,3+Math.sqrt(rel)*4.2))}
+function pos(i){var e=eff(i),a=e.a0+T*e.sp/Math.sqrt(e.orbit/70);return{x:Math.cos(a)*e.orbit,y:Math.sin(a)*e.orbit*.5,e:e,a:a}}
+function S2(w){return[W/2+view.x+w[0]*view.z,H/2+view.y+w[1]*view.z]}
+function sphere(c,x,y,r,col){var g=c.createRadialGradient(x-r*.4,y-r*.4,r*.1,x,y,r);g.addColorStop(0,shade(col,.45));g.addColorStop(.55,col);g.addColorStop(1,shade(col,-.65));c.fillStyle=g;c.beginPath();c.arc(x,y,r,0,7);c.fill()}
+function draw(){
+ cx.clearRect(0,0,W,H);sys.stars.forEach(function(s){cx.fillStyle='rgba(255,255,255,'+s[3]+')';cx.beginPath();cx.arc(s[0],s[1],s[2],0,7);cx.fill()});
+ var c0=S2([0,0]);
+ for(var i=0;i<sys.ps.length;i++){var o=eff(i).orbit*view.z;cx.strokeStyle='rgba(201,228,255,'+(i===sel?.5:.16)+')';cx.lineWidth=1.5;cx.beginPath();cx.ellipse(c0[0],c0[1],o,o*.5,0,0,7);cx.stroke()}
+ var g=cx.createRadialGradient(c0[0],c0[1],0,c0[0],c0[1],70*view.z);g.addColorStop(0,sys.color);g.addColorStop(.25,sys.color);g.addColorStop(1,'transparent');cx.globalAlpha=.55;cx.fillStyle=g;cx.beginPath();cx.arc(c0[0],c0[1],70*view.z,0,7);cx.fill();cx.globalAlpha=1;
+ cx.fillStyle=sys.color;cx.beginPath();cx.arc(c0[0],c0[1],16*view.z,0,7);cx.fill();
+ var L=sys.ps.map(function(_,i){return pos(i)});var idx=L.map(function(_,i){return i}).sort(function(a,b){return L[a].y-L[b].y});
+ idx.forEach(function(i){var p=L[i],s=S2([p.x,p.y]),r=px(p.e.rel)*view.z;
+  if(p.e.ring){cx.strokeStyle='rgba(230,210,170,.6)';cx.lineWidth=Math.max(2,r*.28);cx.beginPath();cx.ellipse(s[0],s[1],r*1.9,r*.55,-.25,Math.PI,6.283);cx.stroke()}
+  sphere(cx,s[0],s[1],r,p.e.color);
+  if(p.e.ring){cx.strokeStyle='rgba(230,210,170,.75)';cx.lineWidth=Math.max(2,r*.28);cx.beginPath();cx.ellipse(s[0],s[1],r*1.9,r*.55,-.25,0,Math.PI);cx.stroke()}
+  for(var m=0;m<p.e.moons;m++){var ma=T*2.2+m*2.1,mx=s[0]+Math.cos(ma)*r*(1.8+m*.5),my=s[1]+Math.sin(ma)*r*(1.8+m*.5)*.5;cx.fillStyle='#cfd6e0';cx.beginPath();cx.arc(mx,my,Math.max(1.8,r*.2),0,7);cx.fill()}
+  if(i===sel){cx.strokeStyle=css('--acc');cx.lineWidth=2.5;cx.beginPath();cx.arc(s[0],s[1],r+9,0,7);cx.stroke();cx.fillStyle='#fff';cx.font='20px Vazirmatn,Tahoma,sans-serif';cx.textAlign='center';cx.fillText(p.e.name,s[0],s[1]+r+32);cx.textAlign='start'}})}
+function css(n){return getComputedStyle(document.documentElement).getPropertyValue(n).trim()}
+function info(){var h='';
+ if(sel<0){h='<h2>اطلاعات</h2><div class="sub"><b style="color:var(--tx)">ستاره‌ی '+sys.name+'</b> و '+sys.ps.length+' سیاره. یک سیاره را لمس کن تا مشخصاتش را ببینی و ویرایشش کنی. با کشیدن جابه‌جا شو و با دو انگشت زوم کن.<br><span style="font-size:12px">همه‌ی نام‌ها و ویژگی‌ها خیالی‌اند و فاصله‌ها و اندازه‌ها مقیاس واقعی ندارند.</span></div>'}
+ else{var e=eff(sel);h='<h2>سیاره‌ی انتخاب‌شده</h2><div style="font-size:20px;font-weight:700;margin-bottom:6px">'+e.name+'</div><div class="sub">نوع: '+e.ty+' &nbsp;|&nbsp; اندازه: '+(Math.round(e.rel*10)/10)+' برابر زمین<br>فاصله از ستاره: '+(Math.round(e.orbit/70*100)/100)+' واحد (خیالی) &nbsp;|&nbsp; سال: '+(Math.round(Math.pow(e.orbit/70,1.5)*100)/100)+' واحد<br>حلقه: '+(e.ring?'دارد':'ندارد')+' &nbsp;|&nbsp; قمر: '+e.moons+'</div>'+
+  '<label class="lb"><span>رنگ</span></label><input type="color" id="ec" value="'+e.color+'"><label class="lb" for="es"><span>اندازه</span><b>'+(Math.round(e.rel*10)/10)+'</b></label><input type="range" id="es" min=".3" max="12" step=".1" value="'+e.rel+'"><label class="lb" for="eo"><span>فاصله‌ی مداری</span><b>'+Math.round(e.orbit)+'</b></label><input type="range" id="eo" min="50" max="420" step="1" value="'+e.orbit+'"><div class="row gap"><button id="back">بازگشت به نمای کلی</button></div>'}
+ $('#info').innerHTML=h;
+ if(sel>=0){var ov=function(k,f){return function(ev){U.ov[sel]=U.ov[sel]||{};U.ov[sel][k]=f(ev.target.value)}};
+  $('#ec').oninput=ov('color',String);$('#es').oninput=ov('rel',Number);$('#eo').oninput=ov('orbit',Number);
+  $('#es').onchange=$('#eo').onchange=info;$('#back').onclick=function(){sel=-1;view={z:1,x:0,y:0};info()}}}
+function load(seed,n,ov){U.seed=seed;U.n=n;U.ov=ov||{};$('#seed').value=seed;$('#np').value=n;$('#npo').textContent=n;sel=-1;view={z:1,x:0,y:0};gen();info()}
+function rnd(){var s='',a='abcdefghjkmnpqrstuvwxyz23456789';for(var i=0;i<6;i++)s+=a[Math.floor(Math.random()*a.length)];return s}
+$('#gen').onclick=function(){load(rnd(),U.n,{})};
+$('#seed').onchange=function(){var s=$('#seed').value.trim();if(s)load(s,U.n,{})};
+$('#np').oninput=function(e){$('#npo').textContent=e.target.value;load(U.seed,+e.target.value,U.ov)};
+$('#zi').onclick=function(){view.z=Math.min(4,view.z*1.25)};$('#zo').onclick=function(){view.z=Math.max(.4,view.z/1.25)};
+$('#ov').onclick=function(){view={z:1,x:0,y:0}};
+var RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
+$('#pl').onclick=function(){play=!play;$('#pl').textContent='مدار: '+(play?'در حرکت':'ثابت')};
+$('#save').onclick=function(){var n=$('#uname').value.trim(),m=$('#smsg');if(!n){m.className='msg err';m.textContent='یک نام برای جهان بنویس.';return}
+ saves.unshift({id:Date.now(),name:n,seed:U.seed,n:U.n,ov:U.ov});sv('saves',saves);m.className='msg';m.textContent='«'+n+'» ذخیره شد.';$('#uname').value=''};
+function drawSaves(){$('#sl').innerHTML=saves.length?saves.map(function(s,i){return '<div class="item"><div><b>'+esc(s.name)+'</b><small>بذر: '+esc(s.seed)+' | '+s.n+' سیاره</small></div><div class="row" style="flex:0 0 auto"><button data-o="'+i+'">باز کردن</button><button class="x" data-d="'+i+'" aria-label="حذف '+esc(s.name)+'">✕</button></div></div>'}).join(''):'<div class="empty">هنوز جهانی ذخیره نکرده‌ای. در صفحه‌ی منظومه یک جهان بساز و نامش را بنویس.</div>'}
+$('#sl').onclick=function(e){var o=e.target.closest('[data-o]'),d=e.target.closest('[data-d]');
+ if(o){var s=saves[+o.dataset.o];load(s.seed,s.n,s.ov);go('sys')}
+ if(d&&confirm('این جهان حذف شود؟')){saves.splice(+d.dataset.d,1);sv('saves',saves);drawSaves()}};
+/* touch: pan, pinch, select */
+var ptr={},moved=0,pd=0;
+cv.onpointerdown=function(e){cv.setPointerCapture(e.pointerId);ptr[e.pointerId]=[e.clientX,e.clientY];moved=0;pd=0};
+cv.onpointermove=function(e){if(!ptr[e.pointerId])return;var ids=Object.keys(ptr),k=cv.getBoundingClientRect().width/W;
+ if(ids.length===1){var dx=e.clientX-ptr[e.pointerId][0],dy=e.clientY-ptr[e.pointerId][1];view.x+=dx/k;view.y+=dy/k;moved+=Math.abs(dx)+Math.abs(dy)}
+ else if(ids.length===2){var o=ids.filter(function(i){return +i!==e.pointerId})[0],a=ptr[o],b=[e.clientX,e.clientY],d=Math.hypot(a[0]-b[0],a[1]-b[1]);if(pd)view.z=Math.max(.4,Math.min(4,view.z*d/pd));pd=d;moved+=9}
+ ptr[e.pointerId]=[e.clientX,e.clientY]};
+cv.onpointerup=cv.onpointercancel=function(e){delete ptr[e.pointerId];pd=0;
+ if(moved<8&&e.type==='pointerup'){var r=cv.getBoundingClientRect(),sx=(e.clientX-r.left)*W/r.width,sy=(e.clientY-r.top)*H/r.height,best=-1,bd=1e9;
+  sys.ps.forEach(function(_,i){var p=pos(i),s=S2([p.x,p.y]),d=Math.hypot(s[0]-sx,s[1]-sy);if(d<Math.max(24,px(p.e.rel)*view.z+10)&&d<bd){bd=d;best=i}});
+  sel=best;info()}};
+cv.onwheel=function(e){e.preventDefault();view.z=Math.max(.4,Math.min(4,view.z*(e.deltaY<0?1.1:.9)))};
+/* planet builder */
+var B={t:0,c:'#b07a5a',s:1,ring:false,moon:false,rot:0,drag:false},bv=$('#bv'),bx=bv.getContext('2d'),bsp=[];
+var br=rng(7);for(var i=0;i<34;i++)bsp.push([br()*6.28,(br()-.5)*2.4,br()*.22+.06]);
+function bTypes(){$('#bt').innerHTML=TY.map(function(t,i){return '<button class="chip'+(B.t===i?' on':'')+'" data-i="'+i+'">'+t.n+'</button>'}).join('')}
+$('#bt').onclick=function(e){var b=e.target.closest('[data-i]');if(!b)return;B.t=+b.dataset.i;B.c=TY[B.t].c[0];B.s=Math.round((TY[B.t].r[0]+TY[B.t].r[1])/2*10)/10;$('#bc').value=B.c;$('#bs').value=B.s;$('#bso').textContent=B.s;bTypes()};
+$('#bc').oninput=function(e){B.c=e.target.value};$('#bs').oninput=function(e){B.s=+e.target.value;$('#bso').textContent=B.s};
+$('#br').onchange=function(e){B.ring=e.target.checked};$('#bm').onchange=function(e){B.moon=e.target.checked};
+var lx=0;bv.onpointerdown=function(e){B.drag=true;lx=e.clientX;bv.setPointerCapture(e.pointerId)};bv.onpointermove=function(e){if(B.drag){B.rot+=(e.clientX-lx)*.012;lx=e.clientX}};bv.onpointerup=bv.onpointercancel=function(){B.drag=false};
+function drawB(){bx.clearRect(0,0,720,460);var R=Math.max(40,Math.min(150,36+Math.sqrt(B.s)*40)),X=360,Y=230;
+ if(B.ring){bx.strokeStyle='rgba(230,210,170,.55)';bx.lineWidth=R*.22;bx.beginPath();bx.ellipse(X,Y,R*1.9,R*.5,-.3,Math.PI,6.283);bx.stroke()}
+ sphere(bx,X,Y,R,B.c);bx.save();bx.beginPath();bx.arc(X,Y,R,0,7);bx.clip();
+ if(B.t===1){for(var k=-4;k<=4;k++){bx.fillStyle=shade(B.c,k%2?-.25:.2);bx.globalAlpha=.35;bx.fillRect(X-R,Y+k*R*.22,2*R,R*.11)}bx.globalAlpha=1}
+ bsp.forEach(function(s){var a=s[0]+B.rot;if(Math.cos(a)>0){bx.fillStyle=shade(B.c,-.4);bx.globalAlpha=.35*Math.cos(a);bx.beginPath();bx.ellipse(X+R*Math.cos(s[1])*Math.sin(a),Y-R*Math.sin(s[1]),R*s[2]*Math.cos(a)+1,R*s[2],0,0,7);bx.fill()}});bx.globalAlpha=1;bx.restore();
+ if(B.ring){bx.strokeStyle='rgba(230,210,170,.8)';bx.lineWidth=R*.22;bx.beginPath();bx.ellipse(X,Y,R*1.9,R*.5,-.3,0,Math.PI);bx.stroke()}
+ if(B.moon){var a=B.rot*1.6+1,mx=X+Math.cos(a)*R*2.3,my=Y+Math.sin(a)*R*.7;sphere(bx,mx,my,R*.2,'#cfd6e0')}
+ if(!B.drag&&!RM)B.rot+=.006}
+function onTab(t){if(t==='sav')drawSaves()}
+function loop(){if(play&&!RM)T+=.008;draw();drawB();requestAnimationFrame(loop)}
+bTypes();$('#bc').value=B.c;
+load(ls('last','نخستین'),5,{});$('#seed').value=U.seed;
+window.addEventListener('pagehide',function(){sv('last',U.seed)});
+loop();
+
+</script>
+</body>
+</html>
